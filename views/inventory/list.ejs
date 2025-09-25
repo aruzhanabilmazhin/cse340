@@ -3,6 +3,7 @@
 <head>
   <%- include("../partials/head.ejs") %>
   <title><%= title %> | CSE Motors</title>
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
   <%- include("../partials/header.ejs") %>
@@ -13,13 +14,13 @@
     <div class="vehicle-list">
       <% vehicles.forEach(vehicle => { %>
         <div class="vehicle-card">
-          <img src="/images/<%= vehicle.image %>" 
-               alt="<%= vehicle.make %> <%= vehicle.model %>" 
-               class="vehicle-image">
-          <h2><%= vehicle.make %> <%= vehicle.model %></h2>
-          <p><strong>Year:</strong> <%= vehicle.year %></p>
-          <p><strong>Price:</strong> $<%= vehicle.price %></p>
-          <a href="/cars/<%= vehicle.id %>">View Details</a>
+          <img class="card-img" src="/images/<%= vehicle.image %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
+          <div class="card-info">
+            <h3><%= vehicle.make %> <%= vehicle.model %></h3>
+            <p class="price">$<%= vehicle.price.toLocaleString() %></p>
+            <p class="year">Year: <%= vehicle.year %></p>
+            <a href="/cars/<%= vehicle.id %>" class="btn">View Details</a>
+          </div>
         </div>
       <% }) %>
     </div>

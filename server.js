@@ -79,7 +79,7 @@ app.get("/cars/:id", (req, res) => {
   // Форматируем цену на сервере
   const formattedPrice = vehicle.price.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
-  res.render("inventory/details", {
+  res.render("inventory/detail", {
     title: `${vehicle.make} ${vehicle.model}`,
     vehicle,
     formattedPrice

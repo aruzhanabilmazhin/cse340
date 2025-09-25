@@ -3,6 +3,7 @@
 <head>
   <%- include("../partials/head.ejs") %>
   <title><%= title %> | CSE Motors</title>
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
   <%- include("../partials/header.ejs") %>
@@ -11,11 +12,14 @@
   <main>
     <h1><%= vehicle.make %> <%= vehicle.model %></h1>
     <div class="vehicle-detail">
-      <img src="/images/<%= vehicle.image %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
-
+      <div class="vehicle-media">
+        <img src="/images/<%= vehicle.image %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
+      </div>
       <div class="vehicle-info">
         <p><strong>Year:</strong> <%= vehicle.year %></p>
-        <p><strong>Price:</strong> <%= vehicle.formattedPrice %></p>
+        <p><strong>Price:</strong> <%= formattedPrice %></p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget nisl vitae ligula luctus commodo.</p>
+        <a href="/cars" class="btn">Back to List</a>
       </div>
     </div>
   </main>

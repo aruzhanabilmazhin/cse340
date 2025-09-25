@@ -1,33 +1,22 @@
-/* ===== Общие стили ===== */
+/* Общие стили */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
   background: #f9f9f9;
   color: #333;
 }
 
-h1, h2, h3 {
-  margin: 0.5em 0;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* ===== Header & Navigation ===== */
+/* Header */
 header {
   background: #222;
   color: #fff;
   padding: 1rem;
 }
-
 header h1 {
   margin: 0;
   font-size: 1.5rem;
 }
-
 nav ul {
   list-style: none;
   padding: 0;
@@ -35,16 +24,28 @@ nav ul {
   display: flex;
   gap: 1rem;
 }
-
 nav a {
   color: #fff;
+  text-decoration: none;
 }
-
 nav a:hover {
   text-decoration: underline;
 }
 
-/* ===== Vehicle List ===== */
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: #0077cc;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+}
+.btn:hover {
+  background: #005fa3;
+}
+
+/* Vehicle List */
 .vehicle-list {
   display: flex;
   flex-wrap: wrap;
@@ -52,80 +53,89 @@ nav a:hover {
   justify-content: center;
   padding: 1rem;
 }
-
 .vehicle-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
   width: 220px;
   background: #fff;
-  border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  overflow: hidden;
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
 }
-
 .vehicle-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transform: scale(1.03);
 }
-
 .vehicle-card img {
   width: 100%;
   height: 160px;
   object-fit: cover;
-  border-bottom: 1px solid #eee;
-}
-
-.vehicle-card h2 {
-  font-size: 1.1rem;
-  margin: 10px 0 5px;
-}
-
-.vehicle-card p {
-  margin: 5px 0;
-}
-
-.vehicle-card a {
-  display: inline-block;
-  margin: 10px 0;
-  padding: 5px 10px;
-  background: #0077cc;
-  color: #fff;
   border-radius: 4px;
 }
-
-.vehicle-card a:hover {
-  background: #005fa3;
+.vehicle-card h3 {
+  margin: 10px 0 5px;
+  font-size: 1.1rem;
+}
+.vehicle-card .price {
+  color: #14823b;
+  font-weight: 700;
+  margin: 5px 0;
+}
+.vehicle-card .year {
+  color: #555;
+  font-size: 0.875rem;
+  margin: 0;
 }
 
-/* ===== Vehicle Detail ===== */
+/* Vehicle Detail */
 .vehicle-detail {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  align-items: flex-start;
   padding: 1rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-
-.vehicle-detail img {
+.vehicle-media {
   flex: 1 1 400px;
-  max-width: 100%;
+  min-width: 280px;
+}
+.vehicle-media img {
+  width: 100%;
+  height: auto;
   border-radius: 8px;
   object-fit: cover;
 }
-
 .vehicle-info {
   flex: 1 1 400px;
+  min-width: 280px;
+}
+.vehicle-info h2 {
+  margin-top: 0;
+}
+.vehicle-info p {
+  margin: 0.5rem 0;
 }
 
-.vehicle-price {
-  font-size: 1.5rem;
-  color: #14823b;
-  font-weight: 700;
+/* Hero section */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+.hero-car {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.hero-text {
+  max-width: 600px;
 }
 
-/* ===== Footer ===== */
+/* Footer */
 footer {
   background: #222;
   color: #fff;
@@ -134,8 +144,28 @@ footer {
   margin-top: 2rem;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
+/* Errors */
+.error-page {
+  text-align: center;
+  padding: 2rem;
+}
+.error-page h1 {
+  font-size: 2rem;
+  color: #d9534f;
+}
+.error-page p {
+  margin: 1rem 0;
+}
+.error-page a {
+  color: #007bff;
+  text-decoration: none;
+}
+.error-page a:hover {
+  text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 780px) {
   .vehicle-detail {
     flex-direction: column;
   }
@@ -143,31 +173,16 @@ footer {
     justify-content: center;
   }
 }
-.hero img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-.hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-}
-
-@media screen and (min-width: 768px) {
+@media (min-width: 768px) {
   .hero {
     flex-direction: row;
-    text-align: left;
     justify-content: center;
-    gap: 20px;
+    text-align: left;
   }
-
-  .hero img {
-    max-width: 300px; /* Ограничение размера */
-    height: auto;
+  .hero-car {
+    max-width: 300px;
+  }
+  .hero-text {
+    margin-left: 20px;
   }
 }
