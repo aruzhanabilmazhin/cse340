@@ -1,0 +1,12 @@
+<%- include("../layouts/layout", {
+  title: title,
+  nav: nav,
+  content: `
+    <main>
+      <h1><%= title %></h1>
+      <div class="vehicle-container">
+        <%- vehicle %>
+      </div>
+    </main>
+  `
+}) %>
