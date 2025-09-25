@@ -21,9 +21,9 @@ app.set("views", path.join(__dirname, "views"))
 
 // ====== Данные (вместо базы) ======
 const vehicles = [
-  { id: 1, make: "Toyota", model: "Corolla", year: 2020, price: 20000 },
-  { id: 2, make: "Honda", model: "Civic", year: 2021, price: 22000 },
-  { id: 3, make: "Ford", model: "Focus", year: 2019, price: 18000 }
+  { id: 1, make: "Toyota", model: "Corolla", year: 2020, price: 20000, image: "car1.jpg"},
+  { id: 2, make: "Honda", model: "Civic", year: 2021, price: 22000, image: "car2.jpg" },
+  { id: 3, make: "Ford", model: "Focus", year: 2019, price: 18000, image: "car3.jpg" }
 ]
 
 // ====== Routes ======

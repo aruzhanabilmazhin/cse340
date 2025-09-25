@@ -9,9 +9,13 @@
   <%- include("../partials/nav.ejs") %>
 
   <main>
-    <h1><%= title %></h1>
+    <h1><%= vehicle.make %> <%= vehicle.model %></h1>
     <div class="vehicle-detail">
-      <%- vehicleDetail %>
+      <img src="/images/<%= vehicle.image || 'placeholder.jpg' %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
+      <div class="vehicle-info">
+        <p><strong>Year:</strong> <%= vehicle.year %></p>
+        <p><strong>Price:</strong> $<%= vehicle.price.toLocaleString() %></p>
+      </div>
     </div>
   </main>
 
