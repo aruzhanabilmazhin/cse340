@@ -6,12 +6,12 @@ import { fileURLToPath } from "url"
 const app = express()
 const port = process.env.PORT || 3000
 
-// ====== Fix for __dirname in ES modules ======
+// ====== Fix __dirname in ES modules ======
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // ====== Middleware ======
-app.use(express.static(path.join(__dirname, "public"))) // для css, js, images
+app.use(express.static(path.join(__dirname, "public"))) // css, js, images
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
@@ -19,11 +19,32 @@ app.use(express.json())
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
-// ====== Данные (вместо базы) ======
+// ====== Data (mock vehicles) ======
 const vehicles = [
-  { id: 1, make: "Toyota", model: "Corolla", year: 2020, price: 20000, image: "car1.jpg"},
-  { id: 2, make: "Honda", model: "Civic", year: 2021, price: 22000, image: "car2.jpg" },
-  { id: 3, make: "Ford", model: "Focus", year: 2019, price: 18000, image: "car3.jpg" }
+  {
+    id: 1,
+    make: "Toyota",
+    model: "Camry",
+    year: 2020,
+    price: 25000,
+    image: "car1.jpg"
+  },
+  {
+    id: 2,
+    make: "Honda",
+    model: "Civic",
+    year: 2019,
+    price: 22000,
+    image: "car2.jpg"
+  },
+  {
+    id: 3,
+    make: "Ford",
+    model: "Focus",
+    year: 2021,
+    price: 24000,
+    image: "car3.jpg"
+  }
 ]
 
 // ====== Routes ======
@@ -31,30 +52,31 @@ const vehicles = [
 // Главная страница
 app.get("/", (req, res) => {
   res.render("index", { 
-    title: "Home | CSE Motors" 
+    title: "Home | CSE Motors"
   })
 })
 
-// Каталог автомобилей
+// Список машин
 app.get("/cars", (req, res) => {
   res.render("inventory/list", {
-    title: "Available Cars",
+    title: "Cars",
     vehicles
   })
 })
 
-// Детали автомобиля
+// Детали конкретной машины
 app.get("/cars/:id", (req, res) => {
-  const vehicle = vehicles.find(v => v.id === parseInt(req.params.id))
+  const carId = parseInt(req.params.id)
+  const vehicle = vehicles.find(v => v.id === carId)
 
   if (!vehicle) {
     return res.status(404).render("errors/404", {
       title: "Car Not Found",
-      message: "The vehicle you are looking for does not exist."
+      message: "The car you are looking for does not exist."
     })
   }
 
-  res.render("inventory/detail", {
+  res.render("inventory/details", {
     title: `${vehicle.make} ${vehicle.model}`,
     vehicle
   })
@@ -65,7 +87,7 @@ app.get("/trigger-error", (req, res, next) => {
   try {
     throw new Error("Intentional Server Error")
   } catch (err) {
-    next(err) // передаем в обработчик ошибок
+    next(err)
   }
 })
 
@@ -90,5 +112,5 @@ app.use((err, req, res, next) => {
 
 // ====== Server Start ======
 app.listen(port, () => {
-  console.log(`🚗 Server running at http://localhost:${port}`)
+  console.log(`✅ Server running at http://localhost:${port}`)
 })

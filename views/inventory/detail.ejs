@@ -11,7 +11,8 @@
   <main>
     <h1><%= vehicle.make %> <%= vehicle.model %></h1>
     <div class="vehicle-detail">
-      <img src="/images/<%= vehicle.image || 'placeholder.jpg' %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
+      <img src="/images/<%= v.image %>" alt="<%= v.make %> <%= v.model %>">
+
       <div class="vehicle-info">
         <p><strong>Year:</strong> <%= vehicle.year %></p>
         <p><strong>Price:</strong> $<%= vehicle.price.toLocaleString() %></p>

@@ -13,6 +13,9 @@
     <div class="vehicle-list">
       <% vehicles.forEach(vehicle => { %>
         <div class="vehicle-card">
+          <img src="/images/<%= vehicle.image %>" 
+               alt="<%= vehicle.make %> <%= vehicle.model %>" 
+               class="vehicle-image">
           <h2><%= vehicle.make %> <%= vehicle.model %></h2>
           <p><strong>Year:</strong> <%= vehicle.year %></p>
           <p><strong>Price:</strong> $<%= vehicle.price %></p>
