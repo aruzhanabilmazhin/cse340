@@ -11,7 +11,14 @@
   <main>
     <h1><%= title %></h1>
     <div class="vehicle-list">
-      <%- vehicleList %>
+      <% vehicles.forEach(vehicle => { %>
+        <div class="vehicle-card">
+          <h2><%= vehicle.make %> <%= vehicle.model %></h2>
+          <p><strong>Year:</strong> <%= vehicle.year %></p>
+          <p><strong>Price:</strong> $<%= vehicle.price %></p>
+          <a href="/cars/<%= vehicle.id %>">View Details</a>
+        </div>
+      <% }) %>
     </div>
   </main>
 
