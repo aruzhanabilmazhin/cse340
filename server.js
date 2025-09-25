@@ -1,64 +1,77 @@
-// server.js (ESM)
+// server.js
 import express from "express"
 import path from "path"
 import { fileURLToPath } from "url"
-import inventoryRoute from "./routes/inventoryRoute.js" // <-- добавлено
 
 const app = express()
 const port = process.env.PORT || 3000
 
+// ====== Fix __dirname in ES modules ======
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Middleware
-app.use(express.static(path.join(__dirname, "public")))
+// ====== Middleware ======
+app.use(express.static(path.join(__dirname, "public"))) // css, js, images
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// Views
+// ====== View Engine ======
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
-// Routes
+// ====== Routes ======
+
+// Home page
 app.get("/", (req, res) => {
   res.render("index", {
-    title: "Home",
-    body: `
-      <section>
-        <h2>Welcome to CSE Motors</h2>
-        <p>Find your dream car today!</p>
-        <p><a href="/cars">Browse Cars</a></p>
-      </section>
-    `
+    title: "Home"
   })
 })
 
-// подключаем роутер: /cars и /cars/:inv_id
-app.use("/cars", inventoryRoute)
+// Cars page
+app.get("/cars", (req, res) => {
+  // Временный список машин
+  const vehicles = [
+    { id: 1, make: "Toyota", model: "Corolla", year: 2020, price: 20000 },
+    { id: 2, make: "Honda", model: "Civic", year: 2021, price: 22000 },
+    { id: 3, make: "Ford", model: "Focus", year: 2019, price: 18000 }
+  ]
 
-// test 500
-app.get("/trigger-error", (req, res, next) => {
-  next(new Error("Intentional Server Error"))
+  res.render("cars/list", {
+    title: "Available Cars",
+    vehicles
+  })
 })
 
-// 404 handler (routes not matched)
+// Test 500 error
+app.get("/trigger-error", (req, res, next) => {
+  try {
+    throw new Error("Intentional Server Error")
+  } catch (err) {
+    next(err)
+  }
+})
+
+// ====== Error Handlers ======
+
+// 404
 app.use((req, res, next) => {
   res.status(404).render("errors/404", {
     title: "Page Not Found",
-    body: `<section><h1>404 - Page Not Found</h1><p>The page you requested does not exist.</p><p><a href="/">Return to Home</a></p></section>`
+    message: "The page you are looking for does not exist."
   })
 })
 
-// 500 handler
+// 500
 app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).render("errors/500", {
     title: "Server Error",
-    message: "Oops! Something went wrong on our server.",
-    body: `<section><h1>500 - Server Error</h1><p>Oops! Something went wrong on our server.</p><p><a href='/'>Return to Home</a></p></section>`
+    message: "Oops! Something went wrong on our server."
   })
 })
 
+// ====== Start Server ======
 app.listen(port, () => {
   console.log(`🚗 Server running at http://localhost:${port}`)
 })
