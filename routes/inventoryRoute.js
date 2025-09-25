@@ -1,12 +1,12 @@
-// routes/inventoryRoute.js
 import express from "express"
-import { listVehicles, vehicleDetail } from "../controllers/invController.js"
+import { buildVehicleList, buildVehicleDetail } from "../controllers/invController.js"
 
 const router = express.Router()
 
-// /cars/
-router.get("/", listVehicles)
-// /cars/:inv_id
-router.get("/:inv_id", vehicleDetail)
+// список машин
+router.get("/", buildVehicleList)
+
+// детали машины
+router.get("/:id", buildVehicleDetail)
 
 export default router
