@@ -13,10 +13,12 @@ header {
   color: #fff;
   padding: 1rem;
 }
+
 header h1 {
   margin: 0;
   font-size: 1.5rem;
 }
+
 nav ul {
   list-style: none;
   padding: 0;
@@ -24,96 +26,14 @@ nav ul {
   display: flex;
   gap: 1rem;
 }
+
 nav a {
   color: #fff;
   text-decoration: none;
 }
+
 nav a:hover {
   text-decoration: underline;
-}
-
-/* Buttons */
-.btn {
-  display: inline-block;
-  background: #0077cc;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  text-decoration: none;
-}
-.btn:hover {
-  background: #005fa3;
-}
-
-/* Vehicle List */
-.vehicle-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  padding: 1rem;
-}
-.vehicle-card {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  width: 220px;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-}
-.vehicle-card:hover {
-  transform: scale(1.03);
-}
-.vehicle-card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-.vehicle-card h3 {
-  margin: 10px 0 5px;
-  font-size: 1.1rem;
-}
-.vehicle-card .price {
-  color: #14823b;
-  font-weight: 700;
-  margin: 5px 0;
-}
-.vehicle-card .year {
-  color: #555;
-  font-size: 0.875rem;
-  margin: 0;
-}
-
-/* Vehicle Detail */
-.vehicle-detail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: flex-start;
-  padding: 1rem;
-}
-.vehicle-media {
-  flex: 1 1 400px;
-  min-width: 280px;
-}
-.vehicle-media img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
-}
-.vehicle-info {
-  flex: 1 1 400px;
-  min-width: 280px;
-}
-.vehicle-info h2 {
-  margin-top: 0;
-}
-.vehicle-info p {
-  margin: 0.5rem 0;
 }
 
 /* Hero section */
@@ -125,14 +45,56 @@ nav a:hover {
   padding: 1rem;
   gap: 1rem;
 }
+
 .hero-car {
-  max-width: 100%;
-  height: auto;
+  max-width: 300px;   /* ограничение ширины */
+  max-height: 200px;  /* ограничение высоты */
+  width: 100%;
+  height: auto;       /* сохраняем пропорции */
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  object-fit: cover;
 }
+
 .hero-text {
   max-width: 600px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: #0077cc;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #005fa3;
+}
+
+/* Features section */
+.features {
+  padding: 1.5rem;
+  background: white;
+  margin: 1rem;
+  border-radius: 8px;
+}
+
+.features h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
 }
 
 /* Footer */
@@ -144,44 +106,132 @@ footer {
   margin-top: 2rem;
 }
 
-/* Errors */
+/* Vehicle List */
+.vehicle-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.vehicle-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  width: 220px;
+  background: #f9f9f9;
+  transition: transform 0.2s;
+}
+
+.vehicle-card:hover {
+  transform: scale(1.03);
+}
+
+.vehicle-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.vehicle-card h2 {
+  font-size: 1.1rem;
+  margin: 10px 0 5px;
+}
+
+.price {
+  color: #14823b;
+  font-weight: 700;
+  margin: 0;
+}
+
+.miles {
+  margin: 0;
+  color: #555;
+  font-size: 0.875rem;
+}
+
+/* Vehicle Detail */
+.vehicle-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+.vehicle-media {
+  flex: 1 1 420px;
+  min-width: 280px;
+}
+
+.vehicle-media img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  max-height: 300px; /* ограничение высоты картинки */
+}
+
+.vehicle-info {
+  flex: 1 1 420px;
+  min-width: 280px;
+}
+
+.vehicle-info h2 {
+  margin-top: 0;
+}
+
+.vehicle-price {
+  font-size: 1.5rem;
+  color: #14823b;
+  font-weight: 700;
+}
+
+/* Error pages */
 .error-page {
   text-align: center;
   padding: 2rem;
 }
+
 .error-page h1 {
   font-size: 2rem;
   color: #d9534f;
 }
+
 .error-page p {
   margin: 1rem 0;
 }
+
 .error-page a {
   color: #007bff;
   text-decoration: none;
 }
+
 .error-page a:hover {
   text-decoration: underline;
 }
 
-/* Адаптивность */
+/* Responsive */
 @media (max-width: 780px) {
   .vehicle-detail {
     flex-direction: column;
   }
-  .vehicle-list {
-    justify-content: center;
-  }
 }
-@media (min-width: 768px) {
+
+@media screen and (min-width: 768px) {
   .hero {
     flex-direction: row;
     justify-content: center;
     text-align: left;
   }
+
   .hero-car {
     max-width: 300px;
   }
+
   .hero-text {
     margin-left: 20px;
   }
