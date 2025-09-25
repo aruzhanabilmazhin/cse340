@@ -215,4 +215,22 @@ footer {
     flex-direction: column;
   }
 }
+.error-page {
+  text-align: center;
+  padding: 2rem;
+}
+.error-page h1 {
+  font-size: 2rem;
+  color: #d9534f;
+}
+.error-page p {
+  margin: 1rem 0;
+}
+.error-page a {
+  color: #007bff;
+  text-decoration: none;
+}
+.error-page a:hover {
+  text-decoration: underline;
+}
 

@@ -1,11 +1,17 @@
 // server.js
-const express = require("express")
-const path = require("path")
+import express from "express"
+import path from "path"
+import { fileURLToPath } from "url"
+
 const app = express()
 const port = process.env.PORT || 3000
 
+// ====== Настройки путей ======
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 // ====== Middleware ======
-app.use(express.static(path.join(__dirname, "public"))) // папка для css, js, images
+app.use(express.static(path.join(__dirname, "public"))) // статические файлы: css, js, images
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
@@ -17,7 +23,13 @@ app.set("views", path.join(__dirname, "views"))
 // Главная страница
 app.get("/", (req, res) => {
   res.render("index", { 
-    title: "Home | CSE Motors" 
+    title: "Home",
+    body: `
+      <section>
+        <h2>Welcome to CSE Motors</h2>
+        <p>Find your dream car today!</p>
+      </section>
+    `
   })
 })
 
@@ -35,8 +47,7 @@ app.get("/trigger-error", (req, res, next) => {
 // 404 Not Found
 app.use((req, res, next) => {
   res.status(404).render("errors/404", {
-    title: "Page Not Found",
-    message: "The page you are looking for does not exist."
+    title: "Page Not Found"
   })
 })
 
@@ -51,5 +62,5 @@ app.use((err, req, res, next) => {
 
 // ====== Server Start ======
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`)
+  console.log(`🚗 CSE Motors running at http://localhost:${port}`)
 })
