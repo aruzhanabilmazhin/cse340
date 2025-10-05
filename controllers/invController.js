@@ -1,7 +1,7 @@
 import * as invModel from "../models/inventory-model.js";
 import { buildVehicleDetailView, buildClassificationList } from "../utilities/index.js";
 
-// --- Vehicle detail view (текущая функция) ---
+// --- Vehicle detail view ---
 export async function buildByVehicleId(req, res, next) {
   try {
     const invId = parseInt(req.params.invId);
@@ -22,56 +22,95 @@ export async function buildByVehicleId(req, res, next) {
   }
 }
 
-// --- Task 1: Management View ---
-export function buildManagementView(req, res) {
-  const message = req.flash("message");
-  res.render("inventory/management", {
-    title: "Inventory Management",
-    message,
-  });
-}
-
-// --- Task 2: Add Classification ---
-export function buildAddClassificationView(req, res) {
-  const errors = req.flash("errors");
-  res.render("inventory/add-classification", {
-    title: "Add Classification",
-    errors,
-  });
-}
-
-export async function addClassification(req, res) {
+// --- Management view ---
+export async function buildManagementView(req, res, next) {
   try {
-    const { classification_name } = req.body;
-    await invModel.insertClassification(classification_name);
-    req.flash("message", "Classification added successfully!");
-    res.redirect("/inv/");
-  } catch (error) {
-    req.flash("errors", "Failed to add classification.");
-    res.redirect("/inv/classification/add");
+    res.render("inventory/management", {
+      title: "Inventory Management",
+      message: req.flash("message") || null,
+    });
+  } catch (err) {
+    next(err);
   }
 }
 
-// --- Task 3: Add Inventory ---
-export async function buildAddInventoryView(req, res) {
-  const errors = req.flash("errors");
-  const classifications = await buildClassificationList();
-  res.render("inventory/add-inventory", {
-    title: "Add Inventory",
-    errors,
-    classifications,
-    old: {}, // для "sticky form", можно передавать предыдущие значения
-  });
+// --- Add Classification view ---
+export async function buildAddClassificationView(req, res, next) {
+  try {
+    res.render("inventory/add-classification", {
+      title: "Add Classification",
+      errors: null,
+      message: req.flash("message") || null,
+    });
+  } catch (err) {
+    next(err);
+  }
 }
 
-export async function addInventory(req, res) {
+// --- Add Classification POST ---
+export async function addClassification(req, res, next) {
   try {
-    const inventoryData = req.body;
-    await invModel.insertInventory(inventoryData);
-    req.flash("message", "Inventory item added successfully!");
+    const { classification_name } = req.body;
+
+    // Server-side validation
+    if (!classification_name || !/^[A-Za-z0-9]+$/.test(classification_name)) {
+      return res.render("inventory/add-classification", {
+        title: "Add Classification",
+        errors: ["Invalid classification name (no spaces or special characters)"],
+        message: null,
+      });
+    }
+
+    await invModel.insertClassification(classification_name);
+    req.flash("message", "Classification added successfully!");
     res.redirect("/inv/");
-  } catch (error) {
-    req.flash("errors", "Failed to add inventory item.");
-    res.redirect("/inv/add");
+  } catch (err) {
+    next(err);
+  }
+}
+
+// --- Add Inventory view ---
+export async function buildAddInventoryView(req, res, next) {
+  try {
+    const classifications = await invModel.getClassifications();
+    res.render("inventory/add-inventory", {
+      title: "Add Vehicle",
+      classifications,
+      errors: null,
+      message: req.flash("message") || null,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// --- Add Inventory POST ---
+export async function addInventory(req, res, next) {
+  try {
+    const { inv_make, inv_model, inv_year, inv_price, classification_id } = req.body;
+    const errors = [];
+
+    // Basic server-side validation
+    if (!inv_make) errors.push("Make is required");
+    if (!inv_model) errors.push("Model is required");
+    if (!inv_year) errors.push("Year is required");
+    if (!inv_price) errors.push("Price is required");
+    if (!classification_id) errors.push("Classification is required");
+
+    if (errors.length) {
+      const classifications = await invModel.getClassifications();
+      return res.render("inventory/add-inventory", {
+        title: "Add Vehicle",
+        classifications,
+        errors,
+        message: null,
+      });
+    }
+
+    await invModel.insertInventory({ inv_make, inv_model, inv_year, inv_price, classification_id });
+    req.flash("message", "Vehicle added successfully!");
+    res.redirect("/inv/");
+  } catch (err) {
+    next(err);
   }
 }
