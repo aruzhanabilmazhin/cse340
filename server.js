@@ -4,7 +4,8 @@ import { fileURLToPath } from "url";
 import session from "express-session";
 import flash from "connect-flash";
 
-import inventoryRoute from "./routes/inventoryRoute.js";
+// ⚠️ Обрати внимание на регистр имени файла
+import inventoryRoute from "./routes/inventoryroutes.js"; // убедись, что файл называется именно так
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,9 +28,10 @@ app.use(express.static(path.join(__dirname, "public")));
 // ====== Session & Flash ======
 app.use(
   session({
-    secret: "yourSecretKey",
+    secret: process.env.SESSION_SECRET || "yourSecretKey",
     resave: false,
     saveUninitialized: true,
+    cookie: { secure: false }, // если позже будет HTTPS, установи true
   })
 );
 app.use(flash());
@@ -39,16 +41,16 @@ app.get("/", (req, res) => {
   res.render("index", { title: "Home", content: "Welcome to Vehicle Inventory!" });
 });
 
-// Inventory routes
+// ⚡ Inventory routes
 app.use("/inv", inventoryRoute);
 
 // ====== Error Routes ======
-// 404 not found
+// 404 Not Found
 app.use((req, res) => {
   res.status(404).render("404", { title: "Page Not Found", message: "Sorry, this page does not exist." });
 });
 
-// Error handler middleware
+// 500 Server Error
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).render("500", { title: "Server Error", message: "Something went wrong!" });
