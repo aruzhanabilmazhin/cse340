@@ -5,7 +5,7 @@ import session from "express-session";
 import flash from "connect-flash";
 
 // ⚠️ Обрати внимание на регистр имени файла
-import inventoryRoute from "./routes/inventoryroutes.js"; // убедись, что файл называется именно так
+import inventoryRoute from "./routes/inventoryRoute.js"; // убедись, что файл называется именно так
 
 const app = express();
 const port = process.env.PORT || 3000;
