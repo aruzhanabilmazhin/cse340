@@ -1,74 +1,79 @@
 import * as invModel from "../models/inventory-model.js";
+import { buildVehicleDetailView, buildClassificationList } from "../utilities/index.js";
 
-// --- Management page ---
-export async function buildManagementView(req, res, next) {
-  try {
-    const message = req.flash("message");
-    res.render("inventory/management", { title: "Inventory Management", message });
-  } catch (err) {
-    next(err);
-  }
-}
-
-// --- Add classification view ---
-export async function buildAddClassificationView(req, res, next) {
-  try {
-    const message = req.flash("message");
-    res.render("inventory/add-classification", { title: "Add Classification", message });
-  } catch (err) {
-    next(err);
-  }
-}
-
-// --- Insert classification ---
-export async function insertClassification(req, res, next) {
-  try {
-    const { classification_name } = req.body;
-    if (!classification_name || /[^a-zA-Z0-9]/.test(classification_name)) {
-      req.flash("message", "Invalid classification name.");
-      return res.redirect("/inv/add-classification");
-    }
-
-    await invModel.insertClassification(classification_name);
-    req.flash("message", "Classification added successfully!");
-    res.redirect("/inv");
-  } catch (err) {
-    next(err);
-  }
-}
-
-// --- Add inventory view ---
-export async function buildAddInventoryView(req, res, next) {
+// --- Inventory Management Page ---
+export async function buildInventoryManagement(req, res, next) {
   try {
     const classifications = await invModel.getClassifications();
-    const message = req.flash("message");
-    res.render("inventory/add-inventory", { title: "Add Vehicle", classifications, message });
+    res.render("inventory/index", {
+      title: "Inventory Management",
+      classifications,
+      message: req.flash("message"),
+    });
   } catch (err) {
     next(err);
   }
 }
 
-// --- Insert inventory ---
-export async function insertInventory(req, res, next) {
+// --- Add Classification ---
+export async function buildAddClassification(req, res, next) {
   try {
-    const { inv_make, inv_model, inv_year, inv_price, classification_id } = req.body;
-
-    if (!inv_make || !inv_model || !inv_year || !inv_price || !classification_id) {
-      req.flash("message", "All fields are required.");
-      return res.redirect("/inv/add-inventory");
-    }
-
-    const data = { inv_make, inv_model, inv_year: parseInt(inv_year), inv_price: parseFloat(inv_price), classification_id };
-    await invModel.insertInventory(data);
-
-    req.flash("message", "Vehicle added successfully!");
-    res.redirect("/inv");
+    res.render("inventory/add-classification", {
+      title: "Add Classification",
+      message: req.flash("message"),
+    });
   } catch (err) {
     next(err);
   }
 }
 
-// --- Vehicle detail view ---
+export async function addClassification(req, res, next) {
+  try {
+    const { classification_name } = req.body;
+    const result = await invModel.insertClassification(classification_name);
+    if (result.rowCount === 1) {
+      req.flash("message", "Classification added successfully");
+      res.redirect("/inv");
+    } else {
+      req.flash("message", "Failed to add classification");
+      res.redirect("/inv/add-classification");
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
+// --- Add Inventory ---
+export async function buildAddInventory(req, res, next) {
+  try {
+    const classifications = await invModel.getClassifications();
+    res.render("inventory/add-inventory", {
+      title: "Add Inventory",
+      classifications,
+      message: req.flash("message"),
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function addInventory(req, res, next) {
+  try {
+    const data = req.body;
+    const newVehicle = await invModel.insertInventory(data);
+    if (newVehicle) {
+      req.flash("message", "Vehicle added successfully");
+      res.redirect("/inv");
+    } else {
+      req.flash("message", "Failed to add vehicle");
+      res.redirect("/inv/add-inventory");
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
+// --- Vehicle Detail View ---
 export async function buildByVehicleId(req, res, next) {
   try {
     const invId = parseInt(req.params.invId);
@@ -78,20 +83,12 @@ export async function buildByVehicleId(req, res, next) {
       return res.status(404).render("404", { message: "Vehicle not found" });
     }
 
-    const formattedPrice = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(vehicleData.inv_price);
+    const vehicleHTML = buildVehicleDetailView(vehicleData);
 
     res.render("inventory/detail", {
       title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
-      vehicle: {
-        make: vehicleData.inv_make,
-        model: vehicleData.inv_model,
-        year: vehicleData.inv_year,
-        image: vehicleData.inv_image,
-      },
-      formattedPrice,
+      content: vehicleHTML,
+      vehicle: vehicleData,
     });
   } catch (err) {
     next(err);
