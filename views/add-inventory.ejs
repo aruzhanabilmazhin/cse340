@@ -1,0 +1,20 @@
+<h1>Add Inventory Item</h1>
+<p style="color:red;"><%= errors %></p>
+<form action="/inv/add" method="POST">
+  <label>Make:</label>
+  <input type="text" name="inv_make" value="<%= old.inv_make || '' %>" required>
+
+  <label>Model:</label>
+  <input type="text" name="inv_model" value="<%= old.inv_model || '' %>" required>
+
+  <label>Year:</label>
+  <input type="number" name="inv_year" value="<%= old.inv_year || '' %>" required>
+
+  <label>Price:</label>
+  <input type="number" step="0.01" name="inv_price" value="<%= old.inv_price || '' %>" required>
+
+  <label>Classification:</label>
+  <%- classifications %>
+
+  <button type="submit">Add Inventory</button>
+</form>

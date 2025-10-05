@@ -1,6 +1,8 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import session from "express-session";
+import flash from "connect-flash";
 
 import inventoryRoute from "./routes/inventoryRoute.js";
 
@@ -21,6 +23,16 @@ app.use(express.urlencoded({ extended: true }));
 
 // ====== Static Files ======
 app.use(express.static(path.join(__dirname, "public")));
+
+// ====== Session & Flash ======
+app.use(
+  session({
+    secret: "yourSecretKey",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(flash());
 
 // ====== Routes ======
 app.get("/", (req, res) => {
