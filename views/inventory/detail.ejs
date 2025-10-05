@@ -10,20 +10,11 @@
   <%- include("../partials/nav.ejs") %>
 
   <main>
-    <h1><%= vehicle.make %> <%= vehicle.model %></h1>
     <div class="vehicle-detail">
       <div class="vehicle-media">
         <img src="/images/<%= vehicle.image %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
       </div>
       <div class="vehicle-info">
+        <h1><%= vehicle.make %> <%= vehicle.model %></h1>
         <p><strong>Year:</strong> <%= vehicle.year %></p>
         <p><strong>Price:</strong> <%= formattedPrice %></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget nisl vitae ligula luctus commodo.</p>
-        <a href="/cars" class="btn">Back to List</a>
-      </div>
-    </div>
-  </main>
-
-  <%- include("../partials/footer.ejs") %>
-</body>
-</html>

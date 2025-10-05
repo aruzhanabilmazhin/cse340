@@ -3,18 +3,18 @@ import * as invController from "../controllers/invController.js";
 
 const router = express.Router();
 
-// --- Management view ---
-router.get("/", invController.buildManagement);
+// --- Inventory management page ---
+router.get("/", invController.buildManagementView);
 
-// --- Add Classification ---
-router.get("/add-classification", invController.buildAddClassification);
-router.post("/add-classification", invController.addClassification);
+// --- Add classification ---
+router.get("/add-classification", invController.buildAddClassificationView);
+router.post("/add-classification", invController.insertClassification);
 
-// --- Add Inventory ---
-router.get("/add-inventory", invController.buildAddInventory);
-router.post("/add-inventory", invController.addInventory);
+// --- Add inventory item ---
+router.get("/add-inventory", invController.buildAddInventoryView);
+router.post("/add-inventory", invController.insertInventory);
 
-// --- Vehicle detail ---
+// --- Vehicle detail view ---
 router.get("/detail/:invId", invController.buildByVehicleId);
 
 export default router;

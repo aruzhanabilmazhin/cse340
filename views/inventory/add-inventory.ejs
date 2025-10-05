@@ -1,20 +1,42 @@
-<h1>Add Inventory Item</h1>
-<p style="color:red;"><%= errors %></p>
-<form action="/inv/add" method="POST">
-  <label>Make:</label>
-  <input type="text" name="inv_make" value="<%= old.inv_make || '' %>" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Add New Inventory Item</h1>
+  </header>
 
-  <label>Model:</label>
-  <input type="text" name="inv_model" value="<%= old.inv_model || '' %>" required>
+  <% if (messages && messages.length > 0) { %>
+    <div class="flash-messages">
+      <% messages.forEach(msg => { %>
+        <p><%= msg %></p>
+      <% }) %>
+    </div>
+  <% } %>
 
-  <label>Year:</label>
-  <input type="number" name="inv_year" value="<%= old.inv_year || '' %>" required>
+  <main>
+    <form action="/inv/add-inventory" method="POST">
+      <label for="inv_make">Make:</label>
+      <input type="text" name="inv_make" id="inv_make" required value="<%= formData.inv_make || '' %>">
 
-  <label>Price:</label>
-  <input type="number" step="0.01" name="inv_price" value="<%= old.inv_price || '' %>" required>
+      <label for="inv_model">Model:</label>
+      <input type="text" name="inv_model" id="inv_model" required value="<%= formData.inv_model || '' %>">
 
-  <label>Classification:</label>
-  <%- classifications %>
+      <label for="inv_year">Year:</label>
+      <input type="number" name="inv_year" id="inv_year" required value="<%= formData.inv_year || '' %>">
 
-  <button type="submit">Add Inventory</button>
-</form>
+      <label for="inv_price">Price:</label>
+      <input type="number" name="inv_price" id="inv_price" step="0.01" required value="<%= formData.inv_price || '' %>">
+
+      <label for="classification_id">Classification:</label>
+      <%- classificationList %>
+
+      <button type="submit">Add Inventory Item</button>
+    </form>
+  </main>
+</body>
+</html>
