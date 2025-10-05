@@ -1,10 +1,10 @@
 // database/index.js
 import dotenv from "dotenv";
-import pg from "pg";
+import { Pool } from "pg";
 
 dotenv.config();
 
-const pool = new pg.Pool({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }, // обязательно для Render
 });
