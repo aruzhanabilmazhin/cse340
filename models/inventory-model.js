@@ -1,4 +1,3 @@
-import pool from "../database/index.js";
 
 // --- Получение конкретного автомобиля ---
 export async function getVehicleById(invId) {
