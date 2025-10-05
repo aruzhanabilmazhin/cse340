@@ -1,3 +1,6 @@
+import * as invModel from "../models/inventory-model.js";
+
+// --- Build vehicle detail HTML ---
 export function buildVehicleDetailView(vehicle) {
   const price = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -17,4 +20,22 @@ export function buildVehicleDetailView(vehicle) {
       </div>
     </section>
   `;
+}
+
+// --- Build classification select list ---
+export async function buildClassificationList(selectedId = null) {
+  const data = await invModel.getClassifications();
+  let classificationList = '<select name="classification_id" id="classificationList" required>';
+  classificationList += "<option value=''>Choose a Classification</option>";
+
+  data.forEach((row) => {
+    classificationList += `<option value="${row.classification_id}"`;
+    if (selectedId != null && row.classification_id === selectedId) {
+      classificationList += " selected";
+    }
+    classificationList += `>${row.classification_name}</option>`;
+  });
+
+  classificationList += "</select>";
+  return classificationList;
 }
