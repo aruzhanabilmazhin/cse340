@@ -1,6 +1,25 @@
-<h1>Inventory Management</h1>
-<p style="color:green;"><%= message %></p>
-<ul>
-  <li><a href="/inv/classification/add">Add Classification</a></li>
-  <li><a href="/inv/add">Add Inventory</a></li>
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <% if (messages && messages.length) { %>
+    <div class="flash-messages">
+      <% messages.forEach(msg => { %>
+        <p><%= msg %></p>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <h1>Inventory Management</h1>
+  <nav>
+    <ul>
+      <li><a href="/inv/add-classification">Add Classification</a></li>
+      <li><a href="/inv/add-inventory">Add Inventory Item</a></li>
+    </ul>
+  </nav>
+</body>
+</html>
