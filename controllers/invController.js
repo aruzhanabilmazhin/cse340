@@ -4,10 +4,10 @@ import { buildVehicleDetailView, buildClassificationList } from "../utilities/in
 // --- Inventory Management Page ---
 export async function buildInventoryManagement(req, res, next) {
   try {
-    const classifications = await invModel.getClassifications(); // берём классификации из БД
+    const inventory = await invModel.getInventory(); // получить все машины
     res.render("inventory/index", {
       title: "Inventory Management",
-      classifications,
+      inventory,
       message: req.flash("message"),
     });
   } catch (err) {
@@ -47,11 +47,14 @@ export async function addClassification(req, res, next) {
 // --- Add Inventory ---
 export async function buildAddInventory(req, res, next) {
   try {
+    const classifications = await invModel.getClassifications();
     const classificationList = await buildClassificationList();
+
     res.render("inventory/add-inventory", {
       title: "Add Inventory",
-      message: req.flash("message"),
+      classifications,
       classificationList,
+      message: req.flash("message"),
       formData: {}, // пустой объект для "sticky" формы
     });
   } catch (err) {
@@ -61,17 +64,10 @@ export async function buildAddInventory(req, res, next) {
 
 export async function addInventory(req, res, next) {
   try {
-    const { inv_make, inv_model, inv_year, inv_price, classification_id } = req.body;
+    const data = req.body;
+    const newVehicle = await invModel.insertInventory(data);
 
-    const result = await invModel.insertInventory({
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_price,
-      classification_id,
-    });
-
-    if (result.rowCount === 1) {
+    if (newVehicle) {
       req.flash("message", "Vehicle added successfully");
       res.redirect("/inv");
     } else {
