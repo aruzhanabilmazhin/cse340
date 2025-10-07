@@ -4,6 +4,54 @@
   <meta charset="UTF-8">
   <title><%= title %></title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    header h1 {
+      margin-bottom: 20px;
+    }
+    .flash-messages p {
+      color: green;
+      font-weight: bold;
+    }
+    .inventory-buttons {
+      margin-bottom: 20px;
+    }
+    .inventory-buttons a {
+      text-decoration: none;
+      margin-right: 10px;
+    }
+    .inventory-buttons button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .inventory-buttons button:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    table th {
+      background-color: #f2f2f2;
+    }
+    table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -18,29 +66,38 @@
     </div>
   <% } %>
 
-  <main>
-    <table border="1">
-      <thead>
+  <!-- Buttons -->
+  <div class="inventory-buttons">
+    <a href="/inv/add-classification">
+      <button type="button">Add Classification</button>
+    </a>
+    <a href="/inv/add-inventory">
+      <button type="button">Add Inventory</button>
+    </a>
+  </div>
+
+  <!-- Inventory table -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Year</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% inventory.forEach(vehicle => { %>
         <tr>
-          <th>ID</th>
-          <th>Make</th>
-          <th>Model</th>
-          <th>Year</th>
-          <th>Price</th>
+          <td><%= vehicle.inv_id %></td>
+          <td><%= vehicle.inv_make %></td>
+          <td><%= vehicle.inv_model %></td>
+          <td><%= vehicle.inv_year %></td>
+          <td>$<%= vehicle.inv_price %></td>
         </tr>
-      </thead>
-      <tbody>
-        <% inventory.forEach(vehicle => { %>
-          <tr>
-            <td><%= vehicle.inv_id %></td>
-            <td><%= vehicle.inv_make %></td>
-            <td><%= vehicle.inv_model %></td>
-            <td><%= vehicle.inv_year %></td>
-            <td>$<%= vehicle.inv_price %></td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </main>
+      <% }) %>
+    </tbody>
+  </table>
 </body>
 </html>
