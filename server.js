@@ -44,12 +44,11 @@ app.get("/", (req, res) => {
 // ⚡ Inventory routes
 app.use("/inv", inventoryRoute);
 
-// ====== Error Routes ======
 // 404 Not Found
 app.use((req, res) => {
   res
     .status(404)
-    .render("errors/404", {
+    .render("404", {
       title: "Page Not Found",
       message: "Sorry, this page does not exist."
     });
@@ -60,7 +59,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res
     .status(500)
-    .render("errors/500", {
+    .render("500", {
       title: "Server Error",
       message: "Something went wrong!"
     });
