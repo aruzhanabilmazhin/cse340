@@ -3,42 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title><%= title %></title>
-  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <header>
-    <h1>Add New Inventory Item</h1>
-  </header>
+  <h1>Add New Inventory Item</h1>
 
   <% if (message && message.length > 0) { %>
-    <div class="flash-messages">
-      <p><%= message %></p>
-    </div>
+    <p><%= message %></p>
   <% } %>
 
-  <main>
-    <form action="/inv/add-inventory" method="POST">
-      <label for="inv_make">Make:</label>
-      <input type="text" name="inv_make" id="inv_make" required value="<%= formData?.inv_make || '' %>">
-
-      <label for="inv_model">Model:</label>
-      <input type="text" name="inv_model" id="inv_model" required value="<%= formData?.inv_model || '' %>">
-
-      <label for="inv_year">Year:</label>
-      <input type="number" name="inv_year" id="inv_year" required value="<%= formData?.inv_year || '' %>">
-
-      <label for="inv_price">Price:</label>
-      <input type="number" name="inv_price" id="inv_price" step="0.01" required value="<%= formData?.inv_price || '' %>">
-
-      <label for="classification_id">Classification:</label>
-      <select name="classification_id" id="classification_id" required>
-        <% classifications.forEach(c => { %>
-          <option value="<%= c.classification_id %>"><%= c.classification_name %></option>
-        <% }) %>
-      </select>
-
-      <button type="submit">Add Inventory Item</button>
-    </form>
-  </main>
+  <form action="/inv/add-inventory" method="POST">
+    <input type="text" name="inv_make" required placeholder="Make" value="<%= formData?.inv_make || '' %>">
+    <input type="text" name="inv_model" required placeholder="Model" value="<%= formData?.inv_model || '' %>">
+    <input type="number" name="inv_year" required placeholder="Year" value="<%= formData?.inv_year || '' %>">
+    <input type="number" name="inv_price" step="0.01" required placeholder="Price" value="<%= formData?.inv_price || '' %>">
+    <select name="classification_id" required>
+      <% classifications.forEach(c => { %>
+        <option value="<%= c.classification_id %>"><%= c.classification_name %></option>
+      <% }) %>
+    </select>
+    <button type="submit">Add Vehicle</button>
+  </form>
 </body>
 </html>

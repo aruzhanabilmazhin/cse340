@@ -35,12 +35,12 @@ app.use(flash());
 // ====== ROUTES ======
 
 // Главная страница
-app.get("/", (req, res) => {
+app.get("/", async (req, res, next) => {
   try {
     res.render("index", { title: "Home | CSE Motors" });
   } catch (err) {
     console.error("❌ Error rendering index:", err);
-    res.status(500).send("Error loading homepage");
+    next(err); // передаём в 500 middleware
   }
 });
 
@@ -58,13 +58,16 @@ app.use((req, res) => {
 // ====== 500 Server Error ======
 app.use((err, req, res, next) => {
   console.error("❌ SERVER ERROR:", err);
+  console.error(err.stack); // полный стек ошибки
+
   try {
+    // проверяем наличие ejs файла
     res.status(500).render("errors/500", {
       title: "Server Error",
-      message: "Something went wrong! Please try again later.",
+      message: err.message || "Something went wrong! Please try again later.",
     });
   } catch (e) {
-    // fallback, если ejs-файл 500 отсутствует
+    console.error("❌ Failed to render 500 page:", e);
     res.status(500).send("Internal Server Error");
   }
 });

@@ -1,38 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include("../partials/head.ejs") %>
-  <title><%= title %> | CSE Motors</title>
-  <link rel="stylesheet" href="/css/styles.css">
+  <meta charset="UTF-8">
+  <title><%= title %></title>
 </head>
 <body>
-  <%- include("../partials/header.ejs") %>
-  <%- include("../partials/nav.ejs") %>
-
-  <main>
-    <div class="vehicle-detail">
-      <div class="vehicle-media">
-        <% if (vehicle.image) { %>
-          <img src="/images/<%= vehicle.image %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
-        <% } else { %>
-          <img src="/images/placeholder.png" alt="No image available">
-        <% } %>
-      </div>
-
-      <div class="vehicle-info">
-        <h1><%= vehicle.make %> <%= vehicle.model %></h1>
-        <p><strong>Year:</strong> <%= vehicle.year %></p>
-        <p><strong>Price:</strong> <%= vehicle.price ? `$${vehicle.price.toFixed(2)}` : "N/A" %></p>
-        <% if (vehicle.description) { %>
-          <p><strong>Description:</strong> <%= vehicle.description %></p>
-        <% } %>
-
-        <!-- Additional content from controller -->
-        <%- content %>
-      </div>
-    </div>
-  </main>
-
-  <%- include("../partials/footer.ejs") %>
+  <h1><%= vehicle.inv_make %> <%= vehicle.inv_model %></h1>
+  <p><strong>Year:</strong> <%= vehicle.inv_year %></p>
+  <p><strong>Price:</strong> <%= formattedPrice %></p>
+  <p><strong>Description:</strong> <%= vehicle.description %></p>
 </body>
 </html>
