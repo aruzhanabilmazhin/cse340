@@ -1,10 +1,5 @@
-<%- include("../layouts/layout.ejs", {
-  title: "Server Error",
-  body: `
-    <section class="error-page">
-      <h1>500 - Server Error</h1>
-      <p><%= message %></p>
-      <p><a href="/">Return to Home</a></p>
-    </section>
-  `
-}) %>
+<section class="error-page">
+  <h1>500 - Server Error</h1>
+  <p><%= message || "Sorry, something went wrong on our end." %></p>
+  <p><a href="/">Return to Home</a></p>
+</section>
