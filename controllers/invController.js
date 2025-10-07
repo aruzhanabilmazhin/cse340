@@ -1,15 +1,13 @@
-import { buildVehicleDetailView, buildClassificationList } from "../utilities/index.js";
+import { buildVehicleDetailView } from "../utilities/index.js";
 
 // --- Inventory Management Page ---
 export async function buildInventoryManagement(req, res, next) {
   try {
-    // Temporary test data instead of DB call
     const classifications = [
       { classification_id: 1, classification_name: "SUV" },
       { classification_id: 2, classification_name: "Sedan" },
     ];
 
-    // Temporary test inventory
     const inventory = [
       { inv_id: 1, inv_make: "Toyota", inv_model: "RAV4", inv_year: 2022, inv_price: 30000 },
       { inv_id: 2, inv_make: "Honda", inv_model: "Civic", inv_year: 2021, inv_price: 22000 },
@@ -19,7 +17,7 @@ export async function buildInventoryManagement(req, res, next) {
     res.render("inventory/index", {
       title: "Inventory Management",
       classifications,
-      inventory,         // <-- добавили переменную для EJS
+      inventory,
       message: req.flash("message"),
     });
   } catch (err) {
@@ -41,7 +39,6 @@ export async function buildAddClassification(req, res, next) {
 
 export async function addClassification(req, res, next) {
   try {
-    // Fake success
     req.flash("message", "Classification added successfully");
     res.redirect("/inv");
   } catch (err) {
@@ -61,6 +58,7 @@ export async function buildAddInventory(req, res, next) {
       title: "Add Inventory",
       classifications,
       message: req.flash("message"),
+      formData: {}, // <-- чтобы EJS не ругался
     });
   } catch (err) {
     next(err);
@@ -69,7 +67,6 @@ export async function buildAddInventory(req, res, next) {
 
 export async function addInventory(req, res, next) {
   try {
-    // Fake success
     req.flash("message", "Vehicle added successfully");
     res.redirect("/inv");
   } catch (err) {
@@ -82,7 +79,6 @@ export async function buildByVehicleId(req, res, next) {
   try {
     const invId = parseInt(req.params.invId);
 
-    // Temporary test data
     const vehicleData = {
       inv_id: invId,
       inv_make: "Toyota",

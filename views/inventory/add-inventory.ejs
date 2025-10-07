@@ -3,25 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    header h1 { margin-bottom: 20px; }
+    .flash-messages p { color: green; font-weight: bold; }
+    form { max-width: 500px; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+    input, select, button { padding: 8px; font-size: 14px; }
+    button { background-color: #007BFF; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    button:hover { background-color: #0056b3; }
+  </style>
 </head>
 <body>
-  <h1>Add New Inventory Item</h1>
+  <header>
+    <h1>Add New Inventory Item</h1>
+  </header>
 
   <% if (message && message.length > 0) { %>
-    <p><%= message %></p>
+    <div class="flash-messages">
+      <% message.forEach(msg => { %>
+        <p><%= msg %></p>
+      <% }) %>
+    </div>
   <% } %>
 
-  <form action="/inv/add-inventory" method="POST">
-    <input type="text" name="inv_make" required placeholder="Make" value="<%= formData?.inv_make || '' %>">
-    <input type="text" name="inv_model" required placeholder="Model" value="<%= formData?.inv_model || '' %>">
-    <input type="number" name="inv_year" required placeholder="Year" value="<%= formData?.inv_year || '' %>">
-    <input type="number" name="inv_price" step="0.01" required placeholder="Price" value="<%= formData?.inv_price || '' %>">
-    <select name="classification_id" required>
-      <% classifications.forEach(c => { %>
-        <option value="<%= c.classification_id %>"><%= c.classification_name %></option>
-      <% }) %>
-    </select>
-    <button type="submit">Add Vehicle</button>
-  </form>
+  <main>
+    <form action="/inv/add-inventory" method="POST">
+      <input type="text" name="inv_make" required placeholder="Make" value="<%= formData?.inv_make || '' %>">
+      <input type="text" name="inv_model" required placeholder="Model" value="<%= formData?.inv_model || '' %>">
+      <input type="number" name="inv_year" required placeholder="Year" value="<%= formData?.inv_year || '' %>">
+      <input type="number" name="inv_price" step="0.01" required placeholder="Price" value="<%= formData?.inv_price || '' %>">
+
+      <label for="classification_id">Classification:</label>
+      <select name="classification_id" id="classification_id" required>
+        <option value="">--Select Classification--</option>
+        <% classifications.forEach(c => { %>
+          <option value="<%= c.classification_id %>"><%= c.classification_name %></option>
+        <% }) %>
+      </select>
+
+      <button type="submit">Add Inventory Item</button>
+    </form>
+  </main>
 </body>
 </html>
