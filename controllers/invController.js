@@ -9,9 +9,17 @@ export async function buildInventoryManagement(req, res, next) {
       { classification_id: 2, classification_name: "Sedan" },
     ];
 
+    // Temporary test inventory
+    const inventory = [
+      { inv_id: 1, inv_make: "Toyota", inv_model: "RAV4", inv_year: 2022, inv_price: 30000 },
+      { inv_id: 2, inv_make: "Honda", inv_model: "Civic", inv_year: 2021, inv_price: 22000 },
+      { inv_id: 3, inv_make: "Ford", inv_model: "Explorer", inv_year: 2023, inv_price: 45000 },
+    ];
+
     res.render("inventory/index", {
       title: "Inventory Management",
       classifications,
+      inventory,         // <-- добавили переменную для EJS
       message: req.flash("message"),
     });
   } catch (err) {
@@ -80,6 +88,7 @@ export async function buildByVehicleId(req, res, next) {
       inv_make: "Toyota",
       inv_model: "Camry",
       inv_year: 2023,
+      inv_price: 35000,
     };
 
     const vehicleHTML = buildVehicleDetailView(vehicleData);
