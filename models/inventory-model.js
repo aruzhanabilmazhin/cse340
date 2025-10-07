@@ -1,3 +1,4 @@
+import pool from "../database/Index.js";
 
 // --- Получение конкретного автомобиля ---
 export async function getVehicleById(invId) {
@@ -10,7 +11,7 @@ export async function getVehicleById(invId) {
   }
 }
 
-// --- Task 2: Добавление классификации ---
+// --- Добавление классификации ---
 export async function insertClassification(classification_name) {
   try {
     const sql = "INSERT INTO classification (classification_name) VALUES ($1)";
@@ -21,7 +22,7 @@ export async function insertClassification(classification_name) {
   }
 }
 
-// --- Task 3: Добавление инвентаря ---
+// --- Добавление инвентаря ---
 export async function insertInventory(data) {
   try {
     const sql = `
