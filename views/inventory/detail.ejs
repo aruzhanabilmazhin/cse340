@@ -12,9 +12,27 @@
   <main>
     <div class="vehicle-detail">
       <div class="vehicle-media">
-        <img src="/images/<%= vehicle.image %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
+        <% if (vehicle.image) { %>
+          <img src="/images/<%= vehicle.image %>" alt="<%= vehicle.make %> <%= vehicle.model %>">
+        <% } else { %>
+          <img src="/images/placeholder.png" alt="No image available">
+        <% } %>
       </div>
+
       <div class="vehicle-info">
         <h1><%= vehicle.make %> <%= vehicle.model %></h1>
         <p><strong>Year:</strong> <%= vehicle.year %></p>
-        <p><strong>Price:</strong> <%= formattedPrice %></p>
+        <p><strong>Price:</strong> <%= vehicle.price ? `$${vehicle.price.toFixed(2)}` : "N/A" %></p>
+        <% if (vehicle.description) { %>
+          <p><strong>Description:</strong> <%= vehicle.description %></p>
+        <% } %>
+
+        <!-- Additional content from controller -->
+        <%- content %>
+      </div>
+    </div>
+  </main>
+
+  <%- include("../partials/footer.ejs") %>
+</body>
+</html>

@@ -10,18 +10,23 @@
     <h1>Add New Classification</h1>
   </header>
 
-  <% if (messages && messages.length > 0) { %>
+  <% if (message && message.length > 0) { %>
     <div class="flash-messages">
-      <% messages.forEach(msg => { %>
-        <p><%= msg %></p>
-      <% }) %>
+      <p><%= message %></p>
     </div>
   <% } %>
 
   <main>
     <form action="/inv/add-classification" method="POST">
       <label for="classification_name">Classification Name:</label>
-      <input type="text" name="classification_name" id="classification_name" required pattern="[A-Za-z0-9]+" title="No spaces or special characters">
+      <input 
+        type="text" 
+        name="classification_name" 
+        id="classification_name" 
+        required 
+        pattern="[A-Za-z0-9]+" 
+        title="No spaces or special characters"
+      >
       <button type="submit">Add Classification</button>
     </form>
   </main>
