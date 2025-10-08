@@ -3,17 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1>Add New Classification</h1>
+  <header>
+    <h1>Add New Classification</h1>
+    <% if (message && message.length > 0) { %>
+      <div class="flash-messages">
+        <p><%= message %></p>
+      </div>
+    <% } %>
+  </header>
 
-  <% if (message && message.length > 0) { %>
-    <p><%= message %></p>
-  <% } %>
-
-  <form action="/inv/add-classification" method="POST">
-    <input type="text" name="classification_name" required placeholder="Classification Name">
-    <button type="submit">Add Classification</button>
-  </form>
+  <main>
+    <form action="/inv/add-classification" method="POST">
+      <label for="classification_name">Classification Name:</label>
+      <input type="text" name="classification_name" id="classification_name" required 
+             pattern="[A-Za-z0-9]+" 
+             title="No spaces or special characters">
+      <button type="submit">Add Classification</button>
+    </form>
+  </main>
 </body>
 </html>

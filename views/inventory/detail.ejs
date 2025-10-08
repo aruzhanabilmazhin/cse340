@@ -3,11 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1><%= vehicle.inv_make %> <%= vehicle.inv_model %></h1>
-  <p><strong>Year:</strong> <%= vehicle.inv_year %></p>
-  <p><strong>Price:</strong> <%= formattedPrice %></p>
-  <p><strong>Description:</strong> <%= vehicle.description %></p>
+  <header>
+    <h1><%= vehicle.inv_make %> <%= vehicle.inv_model %></h1>
+  </header>
+
+  <main>
+    <section class="vehicle-detail">
+      <img src="/images/<%= vehicle.inv_image || 'no-image.png' %>" 
+           alt="Image of <%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+
+      <div class="vehicle-info">
+        <p><strong>Make:</strong> <%= vehicle.inv_make %></p>
+        <p><strong>Model:</strong> <%= vehicle.inv_model %></p>
+        <p><strong>Year:</strong> <%= vehicle.inv_year %></p>
+        <p><strong>Price:</strong> $<%= vehicle.inv_price %></p>
+        <p><strong>Mileage:</strong> <%= vehicle.inv_miles || 0 %> miles</p>
+        <p><strong>Classification:</strong> <%= vehicle.classification_name || 'N/A' %></p>
+        <p><strong>Description:</strong> <%= vehicle.inv_description || 'No description available' %></p>
+      </div>
+    </section>
+
+    <a href="/inv">Back to Inventory</a>
+  </main>
 </body>
 </html>
