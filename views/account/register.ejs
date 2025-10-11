@@ -1,38 +1,15 @@
-<%- include("../layouts/layout", { 
-  title: "Register | CSE Motors",
-  body: `
-  <main class='auth-page'>
-    <section class='auth-container'>
-      <h2>Create an Account</h2>
+<h1>Register</h1>
+<form action="/accounts/register" method="POST">
+  <label for="fullname">Full Name:</label>
+  <input type="text" id="fullname" name="fullname" required>
 
-      <% if (messages && messages.length) { %>
-        <div class='flash-messages'>
-          <% messages.forEach(msg => { %>
-            <p><%= msg %></p>
-          <% }) %>
-        </div>
-      <% } %>
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required>
 
-      <form action='/accounts/register' method='POST' class='auth-form'>
-        <label for='firstname'>First Name:</label>
-        <input type='text' id='firstname' name='firstname' required>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required>
 
-        <label for='lastname'>Last Name:</label>
-        <input type='text' id='lastname' name='lastname' required>
+  <button type="submit">Create Account</button>
+</form>
 
-        <label for='email'>Email:</label>
-        <input type='email' id='email' name='email' required>
-
-        <label for='password'>Password:</label>
-        <input type='password' id='password' name='password' required>
-
-        <button type='submit' class='btn'>Register</button>
-
-        <p class='form-text'>
-          Already have an account? <a href='/accounts/login'>Login here</a>
-        </p>
-      </form>
-    </section>
-  </main>
-  `
-}) %>
+<p>Already have an account? <a href="/accounts/login">Login here</a></p>

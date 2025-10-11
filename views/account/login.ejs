@@ -1,32 +1,12 @@
-<%- include("../layouts/layout", { 
-  title: "Login | CSE Motors",
-  body: `
-  <main class='auth-page'>
-    <section class='auth-container'>
-      <h2>Login to Your Account</h2>
+<h1>Login</h1>
+<form action="/accounts/login" method="POST">
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" required>
 
-      <% if (messages && messages.length) { %>
-        <div class='flash-messages'>
-          <% messages.forEach(msg => { %>
-            <p><%= msg %></p>
-          <% }) %>
-        </div>
-      <% } %>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required>
 
-      <form action='/accounts/login' method='POST' class='auth-form'>
-        <label for='email'>Email:</label>
-        <input type='email' id='email' name='email' required>
+  <button type="submit">Login</button>
+</form>
 
-        <label for='password'>Password:</label>
-        <input type='password' id='password' name='password' required>
-
-        <button type='submit' class='btn'>Login</button>
-
-        <p class='form-text'>
-          Don’t have an account? <a href='/accounts/register'>Register here</a>
-        </p>
-      </form>
-    </section>
-  </main>
-  `
-}) %>
+<p>Don't have an account? <a href="/accounts/register">Register here</a></p>

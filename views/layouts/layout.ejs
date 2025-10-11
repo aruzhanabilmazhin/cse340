@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %></title>
-  <link rel="stylesheet" href="/css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | CSE Motors</title>
+
+  <!-- ✅ Убедись, что путь корректен -->
+  <link rel="stylesheet" href="/css/styles.css" />
 </head>
+
 <body>
   <header>
-    <h1>CSE Motors</h1>
+    <h1><a href="/" class="site-title">CSE Motors</a></h1>
     <nav>
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/inv">Inventory</a></li>
-        <li><a href="/accounts/login">Login</a></li>
-        <% if (account) { %>
+        <% if (!account) { %>
+          <li><a href="/accounts/login">Login</a></li>
+        <% } else { %>
           <li><a href="/accounts/manage">My Account</a></li>
           <li><a href="/accounts/logout">Logout</a></li>
         <% } %>
       </ul>
     </nav>
+
     <% if (messages && messages.length) { %>
       <div class="flash-messages">
-        <% messages.forEach(msg => { %>
+        <% messages.forEach((msg) => { %>
           <p><%= msg %></p>
         <% }) %>
       </div>
