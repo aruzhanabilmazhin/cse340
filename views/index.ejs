@@ -1,4 +1,4 @@
-<!-- 🌟 Hero Section -->
+<!-- Главная страница -->
 <section class="hero">
   <div class="hero-content">
     <div class="hero-text">
@@ -6,20 +6,48 @@
         <h1>Welcome back, <%= account.firstname %>!</h1>
         <p>Explore our latest cars and exclusive deals available only for members.</p>
         <div class="hero-buttons">
-          <a href="/inv" class="btn">View Inventory</a>
-          <a href="/accounts/manage" class="btn secondary">My Account</a>
+          <a href="/cars" class="btn">View Inventory</a>
+          <a href="/account/manage" class="btn secondary">My Account</a>
         </div>
       <% } else { %>
         <h1>Welcome to <span class="highlight">CSE Motors</span></h1>
         <p>Your trusted dealership with the best deals on new and used cars.</p>
         <div class="hero-buttons">
-          <a href="/accounts/login" class="btn">Login</a>
-          <a href="/accounts/register" class="btn secondary">Register</a>
+          <a href="/account/login" class="btn">Login</a>
+          <a href="/account/register" class="btn secondary">Register</a>
         </div>
       <% } %>
     </div>
+
     <div class="hero-image">
       <img src="/images/hero-car.jpg" alt="CSE Motors Showroom">
     </div>
+  </div>
+</section>
+
+<!-- Featured Cars -->
+<section class="featured">
+  <h2>Featured Cars</h2>
+  <div class="car-grid">
+    <article class="car-card">
+      <img src="/images/car1.jpg" alt="2023 Toyota Camry">
+      <h3>2023 Toyota Camry</h3>
+      <p>Reliable and efficient sedan, perfect for families.</p>
+      <a href="/cars/detail/1" class="btn small">Learn More</a>
+    </article>
+
+    <article class="car-card">
+      <img src="/images/car2.jpg" alt="2022 Ford Mustang">
+      <h3>2022 Ford Mustang</h3>
+      <p>Powerful performance with sleek modern design.</p>
+      <a href="/cars/detail/2" class="btn small">Learn More</a>
+    </article>
+
+    <article class="car-card">
+      <img src="/images/car3.jpg" alt="2023 Honda CR-V">
+      <h3>2023 Honda CR-V</h3>
+      <p>Spacious SUV with advanced safety features.</p>
+      <a href="/cars/detail/3" class="btn small">Learn More</a>
+    </article>
   </div>
 </section>
