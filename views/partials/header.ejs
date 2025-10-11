@@ -6,6 +6,13 @@
       <li><a href="/cars">Cars</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/contact">Contact</a></li>
+
+      <% if (account) { %>
+        <li><a href="/accounts/manage">Welcome, <%= account.firstname %></a></li>
+        <li><a href="/accounts/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/accounts/login">My Account</a></li>
+      <% } %>
     </ul>
   </nav>
 </header>

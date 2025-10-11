@@ -3,7 +3,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
 import flash from "connect-flash";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 import inventoryRoute from "./routes/inventoryRoute.js";
+import accountsRoute from "./routes/accountsRoute.js"; // 👈 добавили маршруты аккаунтов
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +23,7 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser()); // 👈 чтобы читать токен из cookie
 
 // ====== Session & Flash ======
 app.use(
@@ -27,10 +31,31 @@ app.use(
     secret: process.env.SESSION_SECRET || "yourSecretKey",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // true — только если HTTPS
+    cookie: { secure: false }, // true — только при HTTPS
   })
 );
 app.use(flash());
+
+// ====== JWT Middleware (глобально) ======
+app.use((req, res, next) => {
+  const token = req.cookies.jwt; // 👈 cookie, где хранится токен
+
+  if (!token) {
+    res.locals.account = null; // пользователь не вошёл
+    return next();
+  }
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET || "secret");
+    res.locals.account = payload; // 👈 делаем доступным в EJS (например, header.ejs)
+  } catch (err) {
+    console.error("⚠️ Ошибка JWT:", err.message);
+    res.clearCookie("jwt"); // очищаем невалидный токен
+    res.locals.account = null;
+  }
+
+  next();
+});
 
 // ====== ROUTES ======
 
@@ -40,12 +65,15 @@ app.get("/", async (req, res, next) => {
     res.render("index", { title: "Home | CSE Motors" });
   } catch (err) {
     console.error("❌ Error rendering index:", err);
-    next(err); // передаём в 500 middleware
+    next(err);
   }
 });
 
 // Inventory routes
 app.use("/inv", inventoryRoute);
+
+// Accounts routes 👇
+app.use("/accounts", accountsRoute);
 
 // ====== 404 Not Found ======
 app.use((req, res) => {
@@ -58,10 +86,9 @@ app.use((req, res) => {
 // ====== 500 Server Error ======
 app.use((err, req, res, next) => {
   console.error("❌ SERVER ERROR:", err);
-  console.error(err.stack); // полный стек ошибки
+  console.error(err.stack);
 
   try {
-    // проверяем наличие ejs файла
     res.status(500).render("errors/500", {
       title: "Server Error",
       message: err.message || "Something went wrong! Please try again later.",
