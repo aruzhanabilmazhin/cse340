@@ -1,3 +1,4 @@
+// ====== IMPORTS ======
 import express from "express"
 import path from "path"
 import { fileURLToPath } from "url"
@@ -5,29 +6,37 @@ import session from "express-session"
 import flash from "connect-flash"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
+import expressLayouts from "express-ejs-layouts"
 
 import inventoryRoute from "./routes/inventoryRoute.js"
 import accountsRoute from "./routes/accountsRoute.js"
-import { checkEmployeeOrAdmin, checkLogin } from "./utilities/index.js"
+import { checkEmployeeOrAdmin } from "./utilities/index.js"
 
+// ====== INITIAL SETUP ======
 const app = express()
 const port = process.env.PORT || 3000
 
-// ====== Paths ======
+// ====== PATHS ======
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// ====== View Engine ======
+// ====== VIEW ENGINE ======
 app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
 
-// ====== Middleware ======
+// ====== LAYOUT CONFIG ======
+app.use(expressLayouts)
+app.set("layout", "./layouts/layout") // default layout path
+
+// ====== MIDDLEWARE ======
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.join(__dirname, "public")))
 app.use(cookieParser())
 
-// ====== Session & Flash ======
+// ====== STATIC FILES ======
+app.use(express.static(path.join(__dirname, "public"))) // ✅ serves /css, /images, etc.
+
+// ====== SESSION & FLASH ======
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "yourSecretKey",
@@ -38,7 +47,7 @@ app.use(
 )
 app.use(flash())
 
-// ====== JWT Middleware ======
+// ====== JWT MIDDLEWARE ======
 app.use((req, res, next) => {
   const token = req.cookies.jwt
   if (!token) {
@@ -50,7 +59,7 @@ app.use((req, res, next) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET || "secret")
     res.locals.account = payload
   } catch (err) {
-    console.error("⚠️ Ошибка JWT:", err.message)
+    console.error("⚠️ JWT Error:", err.message)
     res.clearCookie("jwt")
     res.locals.account = null
   }
@@ -60,7 +69,7 @@ app.use((req, res, next) => {
 
 // ====== ROUTES ======
 
-// Главная страница
+// Home page
 app.get("/", (req, res) => {
   res.render("index", {
     title: "Home | CSE Motors",
@@ -75,20 +84,20 @@ app.use("/inv", checkEmployeeOrAdmin, inventoryRoute)
 // Accounts routes
 app.use("/accounts", accountsRoute)
 
-// ====== 404 ======
+// ====== 404 PAGE ======
 app.use((req, res) => {
   res.status(404).render("errors/404", {
-    title: "Page Not Found",
+    title: "Page Not Found | CSE Motors",
     message: "Sorry, the page you requested could not be found.",
   })
 })
 
-// ====== 500 ======
+// ====== 500 PAGE ======
 app.use((err, req, res, next) => {
   console.error("❌ SERVER ERROR:", err)
   try {
     res.status(500).render("errors/500", {
-      title: "Server Error",
+      title: "Server Error | CSE Motors",
       message: err.message || "Something went wrong! Please try again later.",
     })
   } catch (e) {
@@ -97,15 +106,15 @@ app.use((err, req, res, next) => {
   }
 })
 
-// ====== Uncaught Errors ======
+// ====== ERROR HANDLERS ======
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err)
 })
-process.on("unhandledRejection", (reason, promise) => {
+process.on("unhandledRejection", (reason) => {
   console.error("Unhandled Rejection:", reason)
 })
 
-// ====== Start Server ======
+// ====== START SERVER ======
 app.listen(port, () => {
   console.log(`🚗 CSE Motors app running on port ${port}`)
 })
