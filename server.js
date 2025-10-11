@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken"
 
 import inventoryRoute from "./routes/inventoryRoute.js"
 import accountsRoute from "./routes/accountsRoute.js"
-import { checkEmployeeOrAdmin, checkLogin } from "./utilities/index.js" // 👈 импортируем middleware
+import { checkEmployeeOrAdmin, checkLogin } from "./utilities/index.js"
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -25,7 +25,7 @@ app.set("view engine", "ejs")
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "public")))
-app.use(cookieParser()) // 👈 читаем JWT cookie
+app.use(cookieParser())
 
 // ====== Session & Flash ======
 app.use(
@@ -33,23 +33,22 @@ app.use(
     secret: process.env.SESSION_SECRET || "yourSecretKey",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // secure: true только при HTTPS
+    cookie: { secure: false },
   })
 )
 app.use(flash())
 
-// ====== JWT Middleware (глобально для всех страниц) ======
+// ====== JWT Middleware ======
 app.use((req, res, next) => {
   const token = req.cookies.jwt
-
   if (!token) {
-    res.locals.account = null // пользователь не вошёл
+    res.locals.account = null
     return next()
   }
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET || "secret")
-    res.locals.account = payload // 👈 делаем доступным в EJS (header.ejs, manage.ejs и т.д.)
+    res.locals.account = payload
   } catch (err) {
     console.error("⚠️ Ошибка JWT:", err.message)
     res.clearCookie("jwt")
@@ -70,13 +69,13 @@ app.get("/", (req, res) => {
   })
 })
 
-// Inventory routes (с проверкой ролей 👇)
+// Inventory routes
 app.use("/inv", checkEmployeeOrAdmin, inventoryRoute)
 
 // Accounts routes
 app.use("/accounts", accountsRoute)
 
-// ====== 404 Not Found ======
+// ====== 404 ======
 app.use((req, res) => {
   res.status(404).render("errors/404", {
     title: "Page Not Found",
@@ -84,11 +83,9 @@ app.use((req, res) => {
   })
 })
 
-// ====== 500 Server Error ======
+// ====== 500 ======
 app.use((err, req, res, next) => {
   console.error("❌ SERVER ERROR:", err)
-  console.error(err.stack)
-
   try {
     res.status(500).render("errors/500", {
       title: "Server Error",
@@ -100,4 +97,15 @@ app.use((err, req, res, next) => {
   }
 })
 
-// ====== Start
+// ====== Uncaught Errors ======
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err)
+})
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection:", reason)
+})
+
+// ====== Start Server ======
+app.listen(port, () => {
+  console.log(`🚗 CSE Motors app running on port ${port}`)
+})
