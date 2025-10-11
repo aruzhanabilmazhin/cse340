@@ -1,20 +1,21 @@
-import express from "express";
-import * as invController from "../controllers/invController.js";
+import express from "express"
+import * as invController from "../controllers/invController.js"
+import { checkEmployeeOrAdmin } from "../utilities/index.js"
 
-const router = express.Router();
+const router = express.Router()
 
 // --- Inventory Management Page ---
-router.get("/", invController.buildInventoryManagement);
+router.get("/", checkEmployeeOrAdmin, invController.buildInventoryManagement)
 
 // --- Add Classification ---
-router.get("/add-classification", invController.buildAddClassification);
-router.post("/add-classification", invController.addClassification);
+router.get("/add-classification", checkEmployeeOrAdmin, invController.buildAddClassification)
+router.post("/add-classification", checkEmployeeOrAdmin, invController.addClassification)
 
 // --- Add Inventory ---
-router.get("/add-inventory", invController.buildAddInventory);
-router.post("/add-inventory", invController.addInventory);
+router.get("/add-inventory", checkEmployeeOrAdmin, invController.buildAddInventory)
+router.post("/add-inventory", checkEmployeeOrAdmin, invController.addInventory)
 
-// --- Vehicle Detail View ---
-router.get("/detail/:invId", invController.buildByVehicleId);
+// --- Vehicle Detail View (доступна всем) ---
+router.get("/detail/:invId", invController.buildByVehicleId)
 
-export default router;
+export default router

@@ -1,0 +1,26 @@
+<h1><%= title %></h1>
+
+<form action="/accounts/update" method="POST">
+  <h2>Account Update</h2>
+  <label>First Name</label>
+  <input type="text" name="firstname" value="<%= account.firstname %>" required>
+
+  <label>Last Name</label>
+  <input type="text" name="lastname" value="<%= account.lastname %>" required>
+
+  <label>Email</label>
+  <input type="email" name="email" value="<%= account.email %>" required>
+
+  <input type="hidden" name="account_id" value="<%= account.account_id %>">
+  <button type="submit">Update Account</button>
+</form>
+
+<hr>
+
+<form action="/accounts/change-password" method="POST">
+  <h2>Change Password</h2>
+  <label>New Password</label>
+  <input type="password" name="password" required>
+  <input type="hidden" name="account_id" value="<%= account.account_id %>">
+  <button type="submit">Change Password</button>
+</form>

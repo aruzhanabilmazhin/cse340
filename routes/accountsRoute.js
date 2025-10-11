@@ -1,18 +1,22 @@
 import express from "express";
-import * as accountsController from "../controllers/accountsController.js";
+import {
+  buildLogin,
+  processLogin,
+  buildRegister,
+  processRegister,
+  buildAccountManagement,
+  logout
+} from "../controllers/accountsController.js";
 
 const router = express.Router();
 
-// ====== Страница входа ======
-router.get("/login", accountsController.buildLogin);
+router.get("/login", buildLogin);
+router.post("/login", processLogin);
 
-// ====== Обработка входа ======
-router.post("/login", accountsController.processLogin);
+router.get("/register", buildRegister);
+router.post("/register", processRegister);
 
-// ====== Страница управления аккаунтом ======
-router.get("/manage", accountsController.buildAccountManagement);
-
-// ====== Выход ======
-router.get("/logout", accountsController.logout);
+router.get("/manage", buildAccountManagement);
+router.get("/logout", logout);
 
 export default router;

@@ -1,7 +1,25 @@
+<% include ../partials/errors %>
+<% include ../partials/messages %>
+
 <h1><%= title %></h1>
 
-<h2>Welcome, <%= account.firstname %>!</h2>
-<p>Email: <%= account.email %></p>
-<p>Account Type: <%= account.account_type %></p>
+<% if (account) { %>
+  <h2>Welcome, <%= account.firstname %>!</h2>
+  <p>Email: <%= account.email %></p>
+  <p>Account Type: <%= account.account_type %></p>
 
-<a href="/accounts/logout">Logout</a>
+  <!-- Ссылка для обновления аккаунта (для всех типов) -->
+  <p><a href="/accounts/update/<%= account.account_id %>">Update Account Information</a></p>
+
+  <!-- Показываем Inventory Management ТОЛЬКО если Employee или Admin -->
+  <% if (account.account_type === 'Employee' || account.account_type === 'Admin') { %>
+    <h3>Inventory Management</h3>
+    <p><a href="/inv/manage">Go to Inventory Management</a></p>
+  <% } %>
+
+  <!-- Logout -->
+  <p><a href="/accounts/logout">Logout</a></p>
+
+<% } else { %>
+  <p>You are not logged in. <a href="/accounts/login">Login</a></p>
+<% } %>

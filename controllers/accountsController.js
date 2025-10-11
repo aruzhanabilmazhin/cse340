@@ -5,29 +5,40 @@ export const buildLogin = (req, res) => {
   res.render("account/login", { title: "Login", messages: req.flash("info") });
 };
 
+// ====== Отображение формы регистрации ======
+export const buildRegister = (req, res) => {
+  res.render("account/register", { title: "Register", messages: req.flash("info") });
+};
+
+// ====== Обработка регистрации ======
+export const processRegister = (req, res) => {
+  const { firstname, lastname, email, password } = req.body;
+
+  // ⚠️ Обычно здесь — запись в базу данных, хэш пароля и т. д.
+  // Пока просто имитация успешной регистрации:
+  req.flash("info", "Registration successful! You can now log in.");
+  res.redirect("/accounts/login");
+};
+
 // ====== Обработка входа ======
 export const processLogin = (req, res) => {
   const { email } = req.body;
 
-  // ⚠️ Здесь обычно идёт проверка email + password из БД.
-  // Пока используем тестового пользователя:
+  // ⚠️ Тестовый пользователь
   const fakeUser = {
     account_id: 1,
     firstname: "Arujan",
     lastname: "Abilmajin",
     email,
-    account_type: "Client", // может быть "Employee" или "Admin"
+    account_type: "Client",
   };
 
-  // Создаём JWT токен (срок — 2 часа)
+  // JWT токен на 2 часа
   const token = jwt.sign(fakeUser, process.env.JWT_SECRET || "secret", {
     expiresIn: "2h",
   });
 
-  // Сохраняем токен в cookie
   res.cookie("jwt", token, { httpOnly: true, maxAge: 2 * 60 * 60 * 1000 });
-
-  // Переходим на страницу управления аккаунтом
   res.redirect("/accounts/manage");
 };
 
@@ -40,10 +51,7 @@ export const buildAccountManagement = (req, res) => {
     return res.redirect("/accounts/login");
   }
 
-  res.render("account/manage", {
-    title: "My Account",
-    account,
-  });
+  res.render("account/manage", { title: "My Account", account });
 };
 
 // ====== Выход ======

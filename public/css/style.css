@@ -42,22 +42,32 @@ nav a:hover {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 1rem;
+  padding: 2rem 1rem;
   gap: 1rem;
+  background: linear-gradient(to bottom, #f1f1f1, #fff);
 }
 
 .hero-car {
-  max-width: 300px;   /* ограничение ширины */
-  max-height: 200px;  /* ограничение высоты */
   width: 100%;
-  height: auto;       /* сохраняем пропорции */
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  object-fit: cover;
+  max-width: 800px;   /* ограничивает ширину картинки */
+  max-height: 350px;  /* ↓ уменьшено, чтобы не занимала слишком много места */
+  object-fit: cover;  /* сохраняет пропорции */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .hero-text {
-  max-width: 600px;
+  max-width: 650px;
+}
+
+.hero-text h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-text p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
 }
 
 /* Buttons */
@@ -65,9 +75,10 @@ nav a:hover {
   display: inline-block;
   background: #0077cc;
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 5px;
   text-decoration: none;
+  transition: background 0.3s;
 }
 
 .btn:hover {
@@ -78,8 +89,9 @@ nav a:hover {
 .features {
   padding: 1.5rem;
   background: white;
-  margin: 1rem;
+  margin: 1.5rem auto;
   border-radius: 8px;
+  max-width: 900px;
 }
 
 .features h2 {
@@ -95,6 +107,7 @@ nav a:hover {
 .features li {
   margin: 0.5rem 0;
   font-size: 1.1rem;
+  text-align: center;
 }
 
 /* Footer */
@@ -172,7 +185,7 @@ footer {
   height: auto;
   border-radius: 8px;
   object-fit: cover;
-  max-height: 300px; /* ограничение высоты картинки */
+  max-height: 300px;
 }
 
 .vehicle-info {
@@ -214,43 +227,7 @@ footer {
   text-decoration: underline;
 }
 
-/* Responsive */
-@media (max-width: 780px) {
-  .vehicle-detail {
-    flex-direction: column;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .hero {
-    flex-direction: row;
-    justify-content: center;
-    text-align: left;
-  }
-
-  .hero-car {
-    max-width: 300px;
-  }
-
-  .hero-text {
-    margin-left: 20px;
-  }
-}
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-}
-
-nav ul li {
-  margin-bottom: 10px;
-}
-
+/* Flash messages */
 .flash-messages {
   background-color: #f2dede;
   color: #a94442;
@@ -258,4 +235,20 @@ nav ul li {
   margin-bottom: 15px;
   border: 1px solid #ebccd1;
   border-radius: 5px;
+}
+
+/* Responsive */
+@media (max-width: 780px) {
+  .vehicle-detail {
+    flex-direction: column;
+  }
+
+  .hero-car {
+    max-width: 100%;
+    max-height: 250px; /* ещё меньше на мобильных */
+  }
+
+  .hero-text h1 {
+    font-size: 1.6rem;
+  }
 }

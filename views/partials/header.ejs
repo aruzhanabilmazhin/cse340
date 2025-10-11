@@ -1,5 +1,5 @@
 <header>
-  <h1>CSE Motors</h1>
+  <h1><a href="/">CSE Motors</a></h1>
   <nav>
     <ul>
       <li><a href="/">Home</a></li>
@@ -8,10 +8,13 @@
       <li><a href="/contact">Contact</a></li>
 
       <% if (account) { %>
-        <li><a href="/accounts/manage">Welcome, <%= account.firstname %></a></li>
+        <!-- 👇 Если пользователь вошёл -->
+        <li><a href="/accounts/manage">My Account (<%= account.firstname %>)</a></li>
         <li><a href="/accounts/logout">Logout</a></li>
       <% } else { %>
-        <li><a href="/accounts/login">My Account</a></li>
+        <!-- 👇 Если пользователь НЕ вошёл -->
+        <li><a href="/accounts/login">Login</a></li>
+        <li><a href="/accounts/register">Register</a></li>
       <% } %>
     </ul>
   </nav>
