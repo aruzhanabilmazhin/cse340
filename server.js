@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
-app.set("layout", "layouts/layout"); // без ./ — правильно
+app.set("layout", "layouts/layout"); // глобальный layout
 
 // ========== Middleware ==========
 app.use(express.static(path.join(__dirname, "public")));
@@ -26,7 +26,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.render("index", {
     title: "Home",
-    layout: "layouts/layout",
     account: null,
     messages: [],
   });
@@ -36,7 +35,6 @@ app.get("/", (req, res) => {
 app.get("/accounts/login", (req, res) => {
   res.render("accounts/login", {
     title: "Login",
-    layout: "layouts/layout",
     account: null,
     messages: [],
   });
@@ -46,7 +44,6 @@ app.get("/accounts/login", (req, res) => {
 app.get("/accounts/register", (req, res) => {
   res.render("accounts/register", {
     title: "Register",
-    layout: "layouts/layout",
     account: null,
     messages: [],
   });
@@ -56,7 +53,6 @@ app.get("/accounts/register", (req, res) => {
 app.get("/inv", (req, res) => {
   res.render("inventory", {
     title: "Inventory",
-    layout: "layouts/layout",
     account: null,
     messages: [],
   });
@@ -66,7 +62,6 @@ app.get("/inv", (req, res) => {
 app.use((req, res) => {
   res.status(404).render("errors/404", {
     title: "Page Not Found",
-    layout: "layouts/layout",
     account: null,
     messages: [],
   });
