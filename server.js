@@ -13,7 +13,8 @@ const __dirname = path.dirname(__filename);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
-app.set("layout", "layout"); // глобальный layout.ejs
+app.set("layout", "layouts/layout"); // ищет views/layouts/layout.ejs
+
 
 // ========== Middleware ==========
 app.use(express.static(path.join(__dirname, "public")));
