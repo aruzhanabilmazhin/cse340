@@ -5,7 +5,6 @@ const router = express.Router();
 
 // -------- Account routes --------
 
-// Login page
 router.get("/login", (req, res) => {
   res.render("account/login", {
     title: "Login",
@@ -14,7 +13,6 @@ router.get("/login", (req, res) => {
   });
 });
 
-// Register page
 router.get("/register", (req, res) => {
   res.render("account/register", {
     title: "Register",
@@ -23,7 +21,6 @@ router.get("/register", (req, res) => {
   });
 });
 
-// Manage account page
 router.get("/manage", (req, res) => {
   res.render("account/manage", {
     title: "My Account",
@@ -32,7 +29,6 @@ router.get("/manage", (req, res) => {
   });
 });
 
-// Logout
 router.get("/logout", (req, res) => {
   res.redirect("/");
 });
@@ -40,7 +36,7 @@ router.get("/logout", (req, res) => {
 // -------- Contact form enhancement --------
 
 // ✅ Страница добавления сообщения
-router.get("/contact/add", (req, res) => {
+router.get("/add", (req, res) => {
   res.render("add", {
     title: "Add Message",
     account: null,
@@ -49,14 +45,14 @@ router.get("/contact/add", (req, res) => {
 });
 
 // ✅ Обработка формы добавления
-router.post("/contact/add", async (req, res) => {
+router.post("/add", async (req, res) => {
   const { name, email, message } = req.body;
   try {
     await pool.query(
       "INSERT INTO contact_messages (name, email, message, created_at) VALUES ($1, $2, $3, NOW())",
       [name, email, message]
     );
-    res.redirect("/account/contact/list");
+    res.redirect("/contact/list");
   } catch (err) {
     console.error("❌ Ошибка при добавлении:", err);
     res.status(500).send("Ошибка при добавлении сообщения.");
@@ -64,7 +60,7 @@ router.post("/contact/add", async (req, res) => {
 });
 
 // ✅ Страница со списком сообщений
-router.get("/contact/list", async (req, res) => {
+router.get("/list", async (req, res) => {
   try {
     const result = await pool.query(
       "SELECT * FROM contact_messages ORDER BY created_at DESC"
