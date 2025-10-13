@@ -69,7 +69,6 @@ app.get("/account/manage", (req, res) => {
 
 // Logout (placeholder)
 app.get("/account/logout", (req, res) => {
-  // Здесь будет логика выхода
   res.redirect("/");
 });
 
@@ -96,8 +95,8 @@ app.get("/cars/detail/:id", (req, res) => {
 });
 
 // -------- Contact routes --------
-// ✅ теперь все маршруты для контактной формы — в отдельном модуле
-app.use("/contact", userRoute);
+// ✅ теперь всё правильно подключено
+app.use("/contact", contactRoute);
 
 // -------- 404 fallback --------
 app.use((req, res) => {
@@ -110,4 +109,6 @@ app.use((req, res) => {
 
 // ========== Start server ==========
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚗 Server running on http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`🚗 Server running on http://localhost:${PORT}`)
+);
