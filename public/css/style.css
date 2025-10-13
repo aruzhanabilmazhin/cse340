@@ -401,3 +401,20 @@ footer {
 .form-text a:hover {
   text-decoration: underline;
 }
+
+.contact {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #f5f5f5;
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+.contact h2 {
+  margin-bottom: 1rem;
+}
+.contact-buttons {
+  margin-top: 1rem;
+}
+.contact-buttons .btn {
+  margin: 0 0.5rem;
+}

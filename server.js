@@ -2,6 +2,8 @@ import express from "express";
 import expressLayouts from "express-ejs-layouts";
 import path from "path";
 import { fileURLToPath } from "url";
+import pool from "./database/index.js"; // ✅ подключаем базу данных
+import contactRoute from "./routes/contactRoute.js"; // ✅ добавили маршруты для контактной формы
 
 const app = express();
 
@@ -15,11 +17,15 @@ app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
 app.set("layout", "layouts/layout"); // ищет views/layouts/layout.ejs
 
-
 // ========== Middleware ==========
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// ✅ Проверяем подключение к базе при запуске
+pool.connect()
+  .then(() => console.log("✅ Database connected successfully"))
+  .catch((err) => console.error("❌ Database connection error:", err));
 
 // ========== Routes ==========
 
@@ -88,6 +94,10 @@ app.get("/cars/detail/:id", (req, res) => {
     carId,
   });
 });
+
+// -------- Contact routes --------
+// ✅ теперь все маршруты для контактной формы — в отдельном модуле
+app.use("/contact", userRoute);
 
 // -------- 404 fallback --------
 app.use((req, res) => {
