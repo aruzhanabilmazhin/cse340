@@ -42,12 +42,11 @@ app.use(
 )
 app.use(flash())
 
-// make flash messages available in all views
+// Make flash messages available in all views
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg")
   res.locals.error_msg = req.flash("error_msg")
   res.locals.info = req.flash("info")
-  // optionally expose account if set by auth middleware into res.locals.account
   res.locals.account = res.locals.account || null
   next()
 })
@@ -60,11 +59,11 @@ pool
 
 // ========== Routes ==========
 
-// Base routes (Home & About)
+// --- Base routes (Home & About) ---
 app.get("/", baseController.buildHome)
 app.get("/about", baseController.buildAbout)
 
-// Account routes (kept simple placeholders; replace with real controllers if available)
+// --- Account routes ---
 app.get("/account/login", (req, res) => {
   res.render("account/login", { title: "Login", account: null, messages: [] })
 })
@@ -76,39 +75,35 @@ app.get("/account/register", (req, res) => {
 app.get("/account/manage", (req, res) => {
   res.render("account/manage", {
     title: "My Account",
-    account: { firstname: "User" },
+    account: { firstname: "User" }, // пример
     messages: [],
   })
 })
 
 app.get("/account/logout", (req, res) => {
-  // clear cookie/session if used for auth
   res.clearCookie("jwt")
   req.session.destroy(() => {
     res.redirect("/")
   })
 })
 
-// Inventory / Cars routes
-// All routes inside routes/inventoryRoute.js will be mounted under /cars
-app.use("/cars", inventoryRoute)
+// --- Inventory / Cars routes ---
+app.use("/cars", inventoryRoute) // ✅ все маршруты внутри /cars (включая /cars/cars и /cars/detail/:id)
 
-// Contact routes
+// --- Contact routes ---
 app.use("/contact", contactRoute)
 
 // ========== Error handling ==========
+
 // 404 handler
 app.use(errorController.notFound)
 
-// 500 handler — Express expects a 4-arg middleware for errors
+// 500 handler (Express error middleware — обязательно 4 аргумента)
 app.use((err, req, res, next) => {
   console.error("⚠️ Server error:", err.stack || err)
-  // Delegate to errorController.serverError so it can format the response
-  // serverError should accept (err, req, res, next)
   if (errorController && typeof errorController.serverError === "function") {
     return errorController.serverError(err, req, res, next)
   }
-  // Fallback if errorController is missing
   res.status(500).render("errors/500", {
     title: "500 - Server Error",
     message: err.message || "Something went wrong on the server.",
@@ -118,7 +113,3 @@ app.use((err, req, res, next) => {
 // ========== Start server ==========
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`🚗 Server running on http://localhost:${PORT}`))
-
-// -------- Error handling --------
-app.use(errorController.notFound);
-app.use(errorController.serverError);
