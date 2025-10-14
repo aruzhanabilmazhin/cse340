@@ -1,26 +1,20 @@
 // controllers/errorController.js
 
-// 404 - Not Found
-function notFound(req, res) {
+export function notFound(req, res) {
   res.status(404).render("errors/404", {
-    title: "Page Not Found",
-    account: null,
-    messages: [],
+    title: "404 - Page Not Found",
+    message: "The page you’re looking for doesn’t exist.",
+    layout: "layouts/layout",
   });
 }
 
-// 500 - Server Error
-function serverError(err, req, res, next) {
+export function serverError(err, req, res, next) {
   console.error("❌ Server error:", err.stack);
   res.status(500).render("errors/500", {
-    title: "Server Error",
-    account: null,
-    messages: ["An unexpected error occurred. Please try again later."],
+    title: "500 - Server Error",
+    message: err.message || "Something went wrong on our server.",
+    layout: "layouts/layout",
   });
 }
 
-// ✅ Экспорт по умолчанию (default)
-export default {
-  notFound,
-  serverError,
-};
+export default { notFound, serverError };
