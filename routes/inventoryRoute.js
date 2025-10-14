@@ -18,4 +18,7 @@ router.post("/add-inventory", checkEmployeeOrAdmin, invController.addInventory)
 // --- Vehicle Detail View (доступна всем) ---
 router.get("/detail/:invId", invController.buildByVehicleId)
 
+// ✅ Новый маршрут для всех машин (Cars)
+router.get("/cars", invController.buildAllCars)
+
 export default router

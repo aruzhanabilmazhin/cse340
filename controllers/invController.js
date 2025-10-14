@@ -1,5 +1,5 @@
 import * as invModel from "../models/inventory-model.js";
-import { buildClassificationList } from "../utilities/index.js";
+import { buildClassificationList, getNav } from "../utilities/index.js";
 
 // --- Inventory Management Page ---
 export async function buildInventoryManagement(req, res, next) {
@@ -96,5 +96,21 @@ export async function buildByVehicleId(req, res, next) {
     });
   } catch (err) {
     next(err);
+  }
+}
+
+// ✅ --- NEW: Cars Page ---
+export async function buildAllCars(req, res, next) {
+  try {
+    const nav = await getNav();
+    const vehicles = await invModel.getAllVehicles(); // новая функция в модели
+    res.render("inventory/list", {
+      title: "All Cars",
+      nav,
+      vehicles,
+    });
+  } catch (error) {
+    console.error("Error loading cars:", error);
+    next(error);
   }
 }
