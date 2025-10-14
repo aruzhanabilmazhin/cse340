@@ -86,7 +86,7 @@ app.get("/account/logout", (req, res) => {
 })
 
 // --- Inventory routes ---
-app.use("/cars", inventoryRoute)
+app.use("/inv", inventoryRoute)
 
 // --- Contact routes ---
 app.use("/contact", contactRoute)
