@@ -3,7 +3,8 @@ import expressLayouts from "express-ejs-layouts";
 import path from "path";
 import { fileURLToPath } from "url";
 import pool from "./database/index.js"; // ✅ подключаем базу данных
-import contactRoute from "./routes/contactRoute.js"; // ✅ добавили маршруты для контактной формы
+import contactRoute from "./routes/contactRoute.js"; // ✅ маршруты для контактной формы
+import errorController from "./controllers/errorController.js"; // ✅ контроллер ошибок
 
 const app = express();
 
@@ -21,6 +22,9 @@ app.set("layout", "layouts/layout"); // ищет views/layouts/layout.ejs
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// ✅ Подключаем клиентскую валидацию форм
+// (файл public/js/forms.js будет автоматически подгружен через <script> в layout.ejs)
 
 // ✅ Проверяем подключение к базе при запуске
 pool.connect()
@@ -95,17 +99,11 @@ app.get("/cars/detail/:id", (req, res) => {
 });
 
 // -------- Contact routes --------
-// ✅ теперь всё правильно подключено
 app.use("/contact", contactRoute);
 
-// -------- 404 fallback --------
-app.use((req, res) => {
-  res.status(404).render("errors/404", {
-    title: "Page Not Found",
-    account: null,
-    messages: [],
-  });
-});
+// -------- Error routes (404 и 500) --------
+app.use(errorController.notFound); // если ни один маршрут не совпал
+app.use(errorController.serverError); // если произошла серверная ошибка
 
 // ========== Start server ==========
 const PORT = process.env.PORT || 3000;
