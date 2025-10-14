@@ -1,116 +1,152 @@
-import * as invModel from "../models/inventory-model.js";
-import { buildClassificationList, getNav } from "../utilities/index.js";
+import * as invModel from "../models/inventory-model.js"
+import { buildClassificationList, getNav } from "../utilities/index.js"
 
-// --- Inventory Management Page ---
+/* ===============================
+   INVENTORY MANAGEMENT PAGE
+================================= */
 export async function buildInventoryManagement(req, res, next) {
   try {
-    const inventory = await invModel.getInventory(); // список всех автомобилей
-    const classifications = await invModel.getClassifications(); // список всех классификаций
+    const inventory = await invModel.getInventory() // список всех автомобилей
+    const classifications = await invModel.getClassifications() // список всех классификаций
 
     res.render("inventory/index", {
       title: "Inventory Management",
       inventory,
       classifications,
-      message: req.flash("message"),
-    });
+      account: res.locals.account || null,
+      messages: req.flash("message"),
+    })
   } catch (err) {
-    next(err);
+    console.error("Error building Inventory Management:", err)
+    next(err)
   }
 }
 
-// --- Add Classification ---
+/* ===============================
+   ADD CLASSIFICATION
+================================= */
 export async function buildAddClassification(req, res, next) {
   try {
     res.render("inventory/add-classification", {
       title: "Add Classification",
-      message: req.flash("message"),
-    });
+      account: res.locals.account || null,
+      messages: req.flash("message"),
+    })
   } catch (err) {
-    next(err);
+    next(err)
   }
 }
 
 export async function addClassification(req, res, next) {
   try {
-    const { classification_name } = req.body;
-    const result = await invModel.insertClassification(classification_name);
+    const { classification_name } = req.body
+    if (!classification_name || classification_name.trim() === "") {
+      req.flash("message", "Classification name is required.")
+      return res.redirect("/cars/add-classification")
+    }
+
+    const result = await invModel.insertClassification(classification_name.trim())
+
     if (result) {
-      req.flash("message", "Classification added successfully");
-      res.redirect("/inv");
+      req.flash("message", "✅ Classification added successfully.")
+      res.redirect("/cars")
     } else {
-      req.flash("message", "Failed to add classification");
-      res.redirect("/inv/add-classification");
+      req.flash("message", "❌ Failed to add classification.")
+      res.redirect("/cars/add-classification")
     }
   } catch (err) {
-    next(err);
+    console.error("Error adding classification:", err)
+    next(err)
   }
 }
 
-// --- Add Inventory ---
+/* ===============================
+   ADD INVENTORY
+================================= */
 export async function buildAddInventory(req, res, next) {
   try {
-    const classifications = await invModel.getClassifications();
-    const classificationList = await buildClassificationList();
+    const classificationList = await buildClassificationList()
 
     res.render("inventory/add-inventory", {
       title: "Add Inventory",
-      classifications,
       classificationList,
-      message: req.flash("message"),
+      account: res.locals.account || null,
+      messages: req.flash("message"),
       formData: {}, // пустой объект для stickiness
-    });
+    })
   } catch (err) {
-    next(err);
+    console.error("Error building Add Inventory page:", err)
+    next(err)
   }
 }
 
 export async function addInventory(req, res, next) {
   try {
-    const data = req.body;
-    const newVehicle = await invModel.insertInventory(data);
+    const data = req.body
+
+    // простая валидация
+    if (!data.inv_make || !data.inv_model || !data.inv_price) {
+      req.flash("message", "Please fill in all required fields.")
+      return res.redirect("/cars/add-inventory")
+    }
+
+    const newVehicle = await invModel.insertInventory(data)
     if (newVehicle) {
-      req.flash("message", "Vehicle added successfully");
-      res.redirect("/inv");
+      req.flash("message", "✅ Vehicle added successfully.")
+      res.redirect("/cars")
     } else {
-      req.flash("message", "Failed to add vehicle");
-      res.redirect("/inv/add-inventory");
+      req.flash("message", "❌ Failed to add vehicle.")
+      res.redirect("/cars/add-inventory")
     }
   } catch (err) {
-    next(err);
+    console.error("Error adding inventory:", err)
+    next(err)
   }
 }
 
-// --- Vehicle Detail View ---
+/* ===============================
+   VEHICLE DETAIL VIEW
+================================= */
 export async function buildByVehicleId(req, res, next) {
   try {
-    const invId = parseInt(req.params.invId);
-    const vehicleData = await invModel.getVehicleById(invId);
+    const invId = parseInt(req.params.invId)
+    const vehicleData = await invModel.getVehicleById(invId)
 
     if (!vehicleData) {
-      return res.status(404).render("errors/404", { message: "Vehicle not found" });
+      return res.status(404).render("errors/404", {
+        title: "Not Found",
+        message: "Vehicle not found",
+        account: res.locals.account || null,
+      })
     }
 
     res.render("inventory/detail", {
       title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
       vehicle: vehicleData,
-    });
+      account: res.locals.account || null,
+    })
   } catch (err) {
-    next(err);
+    console.error("Error building vehicle detail:", err)
+    next(err)
   }
 }
 
-// ✅ --- NEW: Cars Page ---
+/* ===============================
+   ALL CARS PAGE
+================================= */
 export async function buildAllCars(req, res, next) {
   try {
-    const nav = await getNav();
-    const vehicles = await invModel.getAllVehicles(); // новая функция в модели
+    const nav = await getNav()
+    const vehicles = await invModel.getAllVehicles()
+
     res.render("inventory/list", {
       title: "All Cars",
       nav,
       vehicles,
-    });
+      account: res.locals.account || null,
+    })
   } catch (error) {
-    console.error("Error loading cars:", error);
-    next(error);
+    console.error("Error loading cars:", error)
+    next(error)
   }
 }
