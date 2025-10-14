@@ -3,13 +3,16 @@ import express from "express"
 import expressLayouts from "express-ejs-layouts"
 import path from "path"
 import { fileURLToPath } from "url"
-import pool from "./database/index.js" // подключаем базу данных
-import contactRoute from "./routes/contactRoute.js" // маршруты для контактной формы
-import inventoryRoute from "./routes/inventoryRoute.js" // маршруты для машин
-import errorController from "./controllers/errorController.js" // контроллер ошибок
-import baseController from "./controllers/baseController.js" // контроллер для главной и about
+import pool from "./database/index.js" // ✅ подключаем базу данных
+import contactRoute from "./routes/contactRoute.js" // ✅ маршруты для контактной формы
+import inventoryRoute from "./routes/inventoryRoute.js" // ✅ маршруты для машин
+import errorController from "./controllers/errorController.js" // ✅ контроллер ошибок
+import baseController from "./controllers/baseController.js" // ✅ контроллер для главной и about
+
+// auth / session helpers
 import session from "express-session"
 import flash from "connect-flash"
+import cookieParser from "cookie-parser"
 
 const app = express()
 
@@ -21,14 +24,15 @@ const __dirname = path.dirname(__filename)
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 app.use(expressLayouts)
-app.set("layout", "layouts/layout") // layout.ejs внутри views/layouts/
+app.set("layout", "layouts/layout") // ищет views/layouts/layout.ejs
 
 // ========== Middleware ==========
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(cookieParser()) // нужно для чтения JWT/cookies
 
-// Сессии и Flash для сообщений
+// ========== Sessions & Flash ==========
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "supersecret",
@@ -38,14 +42,17 @@ app.use(
 )
 app.use(flash())
 
-// Глобальные переменные для сообщений
+// make flash messages available in all views
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg")
   res.locals.error_msg = req.flash("error_msg")
+  res.locals.info = req.flash("info")
+  // optionally expose account if set by auth middleware into res.locals.account
+  res.locals.account = res.locals.account || null
   next()
 })
 
-// Проверяем подключение к базе данных при запуске
+// ========== DB connection check ==========
 pool
   .connect()
   .then(() => console.log("✅ Database connected successfully"))
@@ -53,25 +60,17 @@ pool
 
 // ========== Routes ==========
 
-// --- Base routes ---
+// Base routes (Home & About)
 app.get("/", baseController.buildHome)
 app.get("/about", baseController.buildAbout)
 
-// --- Account routes ---
+// Account routes (kept simple placeholders; replace with real controllers if available)
 app.get("/account/login", (req, res) => {
-  res.render("account/login", {
-    title: "Login",
-    account: null,
-    messages: [],
-  })
+  res.render("account/login", { title: "Login", account: null, messages: [] })
 })
 
 app.get("/account/register", (req, res) => {
-  res.render("account/register", {
-    title: "Register",
-    account: null,
-    messages: [],
-  })
+  res.render("account/register", { title: "Register", account: null, messages: [] })
 })
 
 app.get("/account/manage", (req, res) => {
@@ -83,28 +82,34 @@ app.get("/account/manage", (req, res) => {
 })
 
 app.get("/account/logout", (req, res) => {
-  res.redirect("/")
+  // clear cookie/session if used for auth
+  res.clearCookie("jwt")
+  req.session.destroy(() => {
+    res.redirect("/")
+  })
 })
 
-// --- Cars routes ---
-app.use("/cars", inventoryRoute) // все маршруты /cars/*
+// Inventory / Cars routes
+// All routes inside routes/inventoryRoute.js will be mounted under /cars
+app.use("/cars", inventoryRoute)
 
-/*
-   ⚠️ Важно: теперь маршрут для списка всех машин находится по адресу
-   http://localhost:3000/cars/cars
-   Если хочешь, чтобы он открывался просто по /cars, поменяем в inventoryRoute.js
-   router.get("/", invController.buildAllCars)
-*/
-
-// --- Contact routes ---
+// Contact routes
 app.use("/contact", contactRoute)
 
-// --- Error handling ---
-app.use(errorController.notFound) // 404
+// ========== Error handling ==========
+// 404 handler
+app.use(errorController.notFound)
+
+// 500 handler — Express expects a 4-arg middleware for errors
 app.use((err, req, res, next) => {
-  console.error("⚠️ Server error:", err.stack)
-  res.status(500)
-  res.render("errors/500", {
+  console.error("⚠️ Server error:", err.stack || err)
+  // Delegate to errorController.serverError so it can format the response
+  // serverError should accept (err, req, res, next)
+  if (errorController && typeof errorController.serverError === "function") {
+    return errorController.serverError(err, req, res, next)
+  }
+  // Fallback if errorController is missing
+  res.status(500).render("errors/500", {
     title: "500 - Server Error",
     message: err.message || "Something went wrong on the server.",
   })
@@ -112,6 +117,4 @@ app.use((err, req, res, next) => {
 
 // ========== Start server ==========
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () =>
-  console.log(`🚗 Server running on http://localhost:${PORT}`)
-)
+app.listen(PORT, () => console.log(`🚗 Server running on http://localhost:${PORT}`))

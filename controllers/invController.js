@@ -1,13 +1,12 @@
+// controllers/invController.js
 import * as invModel from "../models/inventory-model.js"
 import { buildClassificationList, getNav } from "../utilities/index.js"
 
-/* ===============================
-   INVENTORY MANAGEMENT PAGE
-================================= */
+// --- Inventory Management Page ---
 export async function buildInventoryManagement(req, res, next) {
   try {
-    const inventory = await invModel.getInventory() // список всех автомобилей
-    const classifications = await invModel.getClassifications() // список всех классификаций
+    const inventory = await invModel.getInventory()
+    const classifications = await invModel.getClassifications()
 
     res.render("inventory/index", {
       title: "Inventory Management",
@@ -22,9 +21,7 @@ export async function buildInventoryManagement(req, res, next) {
   }
 }
 
-/* ===============================
-   ADD CLASSIFICATION
-================================= */
+// --- Add Classification ---
 export async function buildAddClassification(req, res, next) {
   try {
     res.render("inventory/add-classification", {
@@ -46,33 +43,28 @@ export async function addClassification(req, res, next) {
     }
 
     const result = await invModel.insertClassification(classification_name.trim())
-
     if (result) {
-      req.flash("message", "✅ Classification added successfully.")
-      res.redirect("/cars")
-    } else {
-      req.flash("message", "❌ Failed to add classification.")
-      res.redirect("/cars/add-classification")
+      req.flash("message", "Classification added successfully.")
+      return res.redirect("/cars")
     }
+    req.flash("message", "Failed to add classification.")
+    res.redirect("/cars/add-classification")
   } catch (err) {
     console.error("Error adding classification:", err)
     next(err)
   }
 }
 
-/* ===============================
-   ADD INVENTORY
-================================= */
+// --- Add Inventory ---
 export async function buildAddInventory(req, res, next) {
   try {
     const classificationList = await buildClassificationList()
-
     res.render("inventory/add-inventory", {
       title: "Add Inventory",
       classificationList,
       account: res.locals.account || null,
       messages: req.flash("message"),
-      formData: {}, // пустой объект для stickiness
+      formData: {},
     })
   } catch (err) {
     console.error("Error building Add Inventory page:", err)
@@ -83,8 +75,6 @@ export async function buildAddInventory(req, res, next) {
 export async function addInventory(req, res, next) {
   try {
     const data = req.body
-
-    // простая валидация
     if (!data.inv_make || !data.inv_model || !data.inv_price) {
       req.flash("message", "Please fill in all required fields.")
       return res.redirect("/cars/add-inventory")
@@ -92,24 +82,21 @@ export async function addInventory(req, res, next) {
 
     const newVehicle = await invModel.insertInventory(data)
     if (newVehicle) {
-      req.flash("message", "✅ Vehicle added successfully.")
-      res.redirect("/cars")
-    } else {
-      req.flash("message", "❌ Failed to add vehicle.")
-      res.redirect("/cars/add-inventory")
+      req.flash("message", "Vehicle added successfully.")
+      return res.redirect("/cars")
     }
+    req.flash("message", "Failed to add vehicle.")
+    res.redirect("/cars/add-inventory")
   } catch (err) {
     console.error("Error adding inventory:", err)
     next(err)
   }
 }
 
-/* ===============================
-   VEHICLE DETAIL VIEW
-================================= */
+// --- Vehicle Detail View ---
 export async function buildByVehicleId(req, res, next) {
   try {
-    const invId = parseInt(req.params.invId)
+    const invId = Number(req.params.invId)
     const vehicleData = await invModel.getVehicleById(invId)
 
     if (!vehicleData) {
@@ -131,14 +118,11 @@ export async function buildByVehicleId(req, res, next) {
   }
 }
 
-/* ===============================
-   ALL CARS PAGE
-================================= */
+// ✅ --- Cars Page ---
 export async function buildAllCars(req, res, next) {
   try {
-    const nav = await getNav()
-    const vehicles = await invModel.getAllVehicles()
-
+    const nav = await getNav().catch(() => null)
+    const vehicles = await invModel.getInventory() // использует твою текущую модель
     res.render("inventory/list", {
       title: "All Cars",
       nav,
