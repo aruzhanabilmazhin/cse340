@@ -1,20 +1,23 @@
 // controllers/errorController.js
+const errorController = {
+  notFound: (req, res) => {
+    res.status(404).render("errors/404", {
+      title: "404 - Not Found",
+      account: null,
+      messages: [],
+      message: "The page you are looking for does not exist.",
+    });
+  },
 
-export function notFound(req, res) {
-  res.status(404).render("errors/404", {
-    title: "404 - Page Not Found",
-    message: "The page you’re looking for doesn’t exist.",
-    layout: "layouts/layout",
-  });
-}
+  serverError: (err, req, res, next) => {
+    console.error("❌ Server Error:", err);
+    res.status(500).render("errors/500", {
+      title: "500 - Server Error",
+      account: null,
+      messages: [],
+      message: err.message || "Something went wrong on the server.",
+    });
+  },
+};
 
-export function serverError(err, req, res, next) {
-  console.error("❌ Server error:", err.stack);
-  res.status(500).render("errors/500", {
-    title: "500 - Server Error",
-    message: err.message || "Something went wrong on our server.",
-    layout: "layouts/layout",
-  });
-}
-
-export default { notFound, serverError };
+export default errorController;
