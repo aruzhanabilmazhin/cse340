@@ -12,6 +12,7 @@ import baseController from "./controllers/baseController.js"
 import session from "express-session"
 import flash from "connect-flash"
 import cookieParser from "cookie-parser"
+import bcrypt from "bcrypt" // ✅ подключаем bcrypt здесь
 
 const app = express()
 
@@ -69,6 +70,47 @@ app.get("/account/login", (req, res) => {
 
 app.get("/account/register", (req, res) => {
   res.render("account/register", { title: "Register", account: null, messages: [], message: null })
+})
+
+// --- Account registration POST route ---
+app.post("/account/register", async (req, res) => {
+  const { firstname, lastname, email, password } = req.body
+
+  // Проверка на пустые поля
+  if (!firstname || !lastname || !email || !password) {
+    req.flash("error_msg", "Please fill in all fields")
+    return res.redirect("/account/register")
+  }
+
+  try {
+    // Проверяем, есть ли уже пользователь с таким email
+    const existingUser = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    )
+
+    if (existingUser.rows.length > 0) {
+      req.flash("error_msg", "Email already registered")
+      return res.redirect("/account/register")
+    }
+
+    // Хешируем пароль перед сохранением
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    // Вставляем нового пользователя в базу
+    await pool.query(
+      "INSERT INTO users (firstname, lastname, email, password) VALUES ($1, $2, $3, $4)",
+      [firstname, lastname, email, hashedPassword]
+    )
+
+    req.flash("success_msg", "Account created successfully! Please log in.")
+    res.redirect("/account/login")
+  } catch (err) {
+    console.error("❌ Registration error:", err)
+    req.flash("error_msg", "Server error. Please try again later.")
+    res.redirect("/account/register")
+  }
 })
 
 app.get("/account/manage", (req, res) => {
